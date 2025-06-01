@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375px, initial-scale=1.0">
+<title>冲榜活动</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+primary: '#4F46E5',
+secondary: '#818CF8'
+},
+borderRadius: {
+'none': '0px',
+'sm': '2px',
+DEFAULT: '4px',
+'md': '8px',
+'lg': '12px',
+'xl': '16px',
+'2xl': '20px',
+'3xl': '24px',
+'full': '9999px',
+'button': '4px'
+}
+}
+}
+}
+</script>
+<style>
+body {
+background-color: #F9FAFB;
+width: 375px;
+min-height: 762px;
+}
+.rank-item {
+animation: flash 1s;
+}
+@keyframes flash {
+0% { background-color: rgba(79, 70, 229, 0.1); }
+100% { background-color: transparent; }
+}
+</style>
+</head>
+<body class="relative">
+<nav class="fixed top-0 w-full bg-white shadow-sm z-50">
+<div class="flex items-center justify-between px-4 h-12">
+<h1 class="text-lg font-medium">冲榜活动</h1>
+<button class="!rounded-button bg-primary text-white px-3 py-1 text-sm">
+活动规则
+</button>
+</div>
+</nav>
+<div class="mt-12">
+<div class="h-48 mb-4 relative">
+<img src="https://ai-public.mastergo.com/ai/img_res/3cfb363fa7bfbcf968a794d06dcccc37.jpg" alt="活动图片" class="w-full h-full object-cover">
+<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
+<h2 class="text-white text-xl font-bold">年度冲榜大赛</h2>
+<p class="text-white/80 text-sm mt-1">2024.01.01 - 2024.01.31</p>
+</div>
+</div>
+<div class="px-4">
+<div class="bg-primary rounded-lg p-4 mb-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<img src="https://ai-public.mastergo.com/ai/img_res/02f9c3a41907b68552de663c8fc87bf8.jpg"
+class="w-12 h-12 rounded-full object-cover border-2 border-white"
+alt="用户头像">
+<div class="text-white">
+<div class="font-medium">陈美玲</div>
+<div class="text-sm opacity-80">当前消费：¥ 8,750</div>
+</div>
+</div>
+<div class="text-white text-center">
+<div class="text-3xl font-bold">4</div>
+<div class="text-sm opacity-80">当前排名</div>
+</div>
+</div>
+</div>
+<div class="bg-white rounded-lg shadow-sm">
+<div class="grid grid-cols-3 gap-4 p-4 border-b">
+<div class="flex flex-col items-center">
+<div class="relative">
+<img src="https://ai-public.mastergo.com/ai/img_res/a30c0ca93a926a6be095a7b3406a3443.jpg"
+class="w-14 h-14 rounded-full object-cover border-2 border-yellow-400"
+alt="第一名头像">
+<i class="fas fa-crown text-yellow-400 absolute -top-2 -right-2"></i>
+</div>
+<div class="mt-2 font-medium">张伟华</div>
+<div class="text-sm text-gray-500">消费金额：¥ 12,580</div>
+</div>
+<div class="flex flex-col items-center">
+<div class="relative">
+<img src="https://ai-public.mastergo.com/ai/img_res/877aa5dd5d36463529ec1973ad8247ed.jpg"
+class="w-14 h-14 rounded-full object-cover border-2 border-gray-300"
+alt="第二名头像">
+<i class="fas fa-award text-gray-300 absolute -top-2 -right-2"></i>
+</div>
+<div class="mt-2 font-medium">林思颖</div>
+<div class="text-sm text-gray-500">消费金额：¥ 11,890</div>
+</div>
+<div class="flex flex-col items-center">
+<div class="relative">
+<img src="https://ai-public.mastergo.com/ai/img_res/594347407b8aa54a61051028c5dab44d.jpg"
+class="w-14 h-14 rounded-full object-cover border-2 border-amber-600"
+alt="第三名头像">
+<i class="fas fa-medal text-amber-600 absolute -top-2 -right-2"></i>
+</div>
+<div class="mt-2 font-medium">王俊杰</div>
+<div class="text-sm text-gray-500">消费金额：¥ 10,450</div>
+</div>
+</div>
+<div class="divide-y">
+<div class="flex items-center p-4 rank-item">
+<div class="w-8 font-medium text-gray-500">4</div>
+<img src="https://ai-public.mastergo.com/ai/img_res/6ab517a1a0200d47daf08529a62fcd2e.jpg"
+class="w-10 h-10 rounded-full object-cover"
+alt="用户头像">
+<div class="ml-3 flex-1">
+<div class="font-medium">陈美玲</div>
+<div class="text-sm text-gray-500">消费金额：¥ 8,750</div>
+</div>
+<i class="fas fa-chevron-right text-gray-400"></i>
+</div>
+<div class="flex items-center p-4 rank-item">
+<div class="w-8 font-medium text-gray-500">5</div>
+<img src="https://ai-public.mastergo.com/ai/img_res/376d2db82d96290e1a48589a13c85fb8.jpg"
+class="w-10 h-10 rounded-full object-cover"
+alt="用户头像">
+<div class="ml-3 flex-1">
+<div class="font-medium">李明阳</div>
+<div class="text-sm text-gray-500">消费金额：¥ 8,320</div>
+</div>
+<i class="fas fa-chevron-right text-gray-400"></i>
+</div>
+<div class="flex items-center p-4 rank-item">
+<div class="w-8 font-medium text-gray-500">6</div>
+<img src="https://ai-public.mastergo.com/ai/img_res/21b3333e19d171549abf03541162bb0e.jpg"
+class="w-10 h-10 rounded-full object-cover"
+alt="用户头像">
+<div class="ml-3 flex-1">
+<div class="font-medium">赵雅芝</div>
+<div class="text-sm text-gray-500">消费金额：¥ 7,980</div>
+</div>
+<i class="fas fa-chevron-right text-gray-400"></i>
+</div>
+<div class="flex items-center p-4 rank-item">
+<div class="w-8 font-medium text-gray-500">7</div>
+<img src="https://ai-public.mastergo.com/ai/img_res/9e878f1c5b0d83913cb50f26da81cddb.jpg"
+class="w-10 h-10 rounded-full object-cover"
+alt="用户头像">
+<div class="ml-3 flex-1">
+<div class="font-medium">刘建国</div>
+<div class="text-sm text-gray-500">消费金额：¥ 7,650</div>
+</div>
+<i class="fas fa-chevron-right text-gray-400"></i>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

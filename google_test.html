@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 原型预览与迭代 (最终精修版 v2)</title>
+    <link href="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* 整体页面字体和颜色基调 */
+        body {
+            font-family: "Noto Sans SC", "Roboto", Tahoma, Arial, "Droid Sans", "Helvetica Neue", "Droid Sans Fallback", "Heiti SC", "Hiragino Sans GB", Simsun, sans-serif;
+            font-size: 16px; /* 常规文本基础字号 */
+            color: #374151; /* Tailwind gray-700 */
+        }
+        /* Roboto字体应用规则 */
+        .text-main-title { font-family: 'Roboto', sans-serif; font-weight: 500; font-size: 20px; }
+        .text-regular { font-family: 'Roboto', sans-serif; font-weight: 400; font-size: 16px; }
+        .text-button { font-family: 'Roboto', sans-serif; font-weight: 500; font-size: 16px; }
+        .text-card-title { font-family: 'Roboto', sans-serif; font-weight: 500; font-size: 18px; }
+
+        /* Webkit浏览器自定义滚动条样式 */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a1a1a1; }
+
+        /* 中间原型预览区域的容器，用于控制原型框架和版本条的整体布局 */
+        .prototype-viewer-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width:100%;
+        }
+
+        /* 包裹原型iframe的直接容器 */
+        .prototype-viewer {
+            padding-top: 1.5rem;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* 模拟手机屏幕的边框和样式 */
+        .prototype-bordered-frame {
+            width: 375px; /* 手机屏幕原始宽度 */
+            height: 812px; /* 手机屏幕原始高度 */
+            border: 4px solid #000000; /* 黑色边框，4px宽 */
+            border-radius: 20px; /* 圆角 */
+            background-color: #ffffff; /* 屏幕背景色 */
+            overflow: hidden; /* 裁剪iframe超出圆角的部分 */
+            position: relative;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.12); /* 阴影增加立体感 */
+            transform: scale(var(--prototype-scale, 0.92)); /* CSS缩放，使其在页面中以合适大小显示 */
+            transform-origin: top center; /* 缩放基点 */
+        }
+
+        .prototype-bordered-frame iframe {
+            width: 100%;
+            height: 100%;
+            border: none; /* iframe自身无边框 */
+            display: block;
+        }
+
+        /* 版本控制条悬浮容器 */
+        .version-controls-sticky-wrapper {
+            width: 100%;
+            position: sticky; /* 粘性定位 */
+            bottom: 0; /* 粘在父容器底部 */
+            background-color: #F9FAFB; /* Tailwind bg-gray-50，避免悬浮时下方内容透出 */
+            padding: 0.75rem 1.5rem; /* 内边距 */
+            z-index: 10; /* 层叠顺序 */
+            border-top: 1px solid #E5E7EB; /* 顶部边框，可选 */
+        }
+        /* 版本按钮基础样式 */
+        .version-btn {
+            transition: background-color 0.15s ease-in-out; /* 背景色过渡效果 */
+        }
+        /* OPTIMIZATION 1: 版本按钮悬浮样式 - 未选中时 */
+        .version-btn:not(.bg-blue-500):hover { /* 仅当按钮未被选中时应用此hover */
+            background-color: #EFF6FF; /* Tailwind blue-50，一个非常浅的蓝色 */
+            /* text-gray-700 颜色保持不变 */
+        }
+        /* 选中状态下的版本按钮悬浮（通常不需要额外变化，或微调） */
+        .version-btn.bg-blue-500:hover {
+            background-color: #2563EB; /* Tailwind blue-600, 稍微深一点的蓝色 */
+        }
+
+
+        /* 左侧边栏字体应用 */
+        .left-sidebar-title { font-family: 'Roboto', sans-serif; font-weight: 500; font-size: 16px; }
+        .page-link { font-family: 'Roboto', sans-serif; font-weight: 400; font-size: 15px; }
+        .version-button-text { font-family: 'Roboto', sans-serif; font-weight: 500; font-size: 14px; }
+        /* 右侧边栏字体应用 */
+        .right-sidebar-main-title { font-family: 'Roboto', sans-serif; font-weight: 500; font-size: 20px; }
+        .right-sidebar-card-title { font-family: 'Roboto', sans-serif; font-weight: 500; font-size: 14px; }
+        .right-sidebar-regular-text { font-family: 'Roboto', sans-serif; font-weight: 400; font-size: 15px; }
+        .chat-input-placeholder::placeholder { font-family: 'Roboto', sans-serif; font-weight: 400; font-size: 15px; color: #9CA3AF; }
+        .chat-message-text { font-family: 'Roboto', sans-serif; font-weight: 400; font-size: 15px; }
+
+        /* 右侧聊天气泡样式 */
+        .chat-item { /* 包裹头像和气泡的容器 */
+            display: flex;
+            align-items: flex-end; /* 头像和气泡底部对齐 */
+            margin-bottom: 0.75rem; /* space-y-3 */
+        }
+        .chat-item-user {
+            justify-content: flex-end; /* 用户消息整体靠右 */
+        }
+        .chat-item-ai {
+            justify-content: flex-start; /* AI消息整体靠左 */
+        }
+        .chat-avatar {
+            width: 32px; /* 头像大小 */
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0; /* 防止头像被压缩 */
+        }
+        .chat-avatar-user {
+            background-color: #7C3AED; /* Tailwind purple-600 */
+            margin-left: 0.5rem; /* space-x-2 */
+        }
+        .chat-avatar-ai {
+            background-color: #4B5563; /* Tailwind gray-600 */
+            margin-right: 0.5rem; /* space-x-2 */
+        }
+        .chat-bubble {
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            max-width: calc(100% - 40px - 0.5rem); /* 限制气泡宽度，给头像留空间 */
+            word-wrap: break-word;
+        }
+        .chat-bubble-user {
+            background-color: #5B21B6; /* Tailwind purple-700 */
+            color: white;
+            border-bottom-right-radius: 0.25rem; /* 小尾巴效果 */
+        }
+        .chat-bubble-ai {
+            background-color: #E5E7EB; /* Tailwind gray-200 */
+            color: #1F2937; /* Tailwind gray-800 */
+            border-bottom-left-radius: 0.25rem; /* 小尾巴效果 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 h-screen overflow-hidden">
+    <!-- 主容器，采用flex布局实现三栏 -->
+    <div class="flex h-full">
+        <!-- 左侧边栏：页面导航与管理 -->
+        <aside class="w-60 bg-white border-r border-gray-200 p-4 space-y-4 flex-shrink-0">
+            <!-- 新建页面按钮 -->
+            <button class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2.5 px-4 rounded-lg flex items-center justify-center space-x-2 left-sidebar-title">
+                <i class="fas fa-plus"></i>
+                <span>新页面</span>
+            </button>
+            <!-- 页面列表导航 -->
+            <nav class="space-y-1">
+                <a href="#" class="page-link block px-3 py-2 rounded-md hover:bg-gray-100 text-gray-700">页面 12</a>
+                <a href="#" class="page-link block px-3 py-2 rounded-md hover:bg-gray-100 text-gray-700">页面 11</a>
+                <a href="#" class="page-link block px-3 py-2 rounded-md hover:bg-gray-100 text-gray-700">页面 10</a>
+                <a href="#" class="page-link block px-3 py-2 rounded-md hover:bg-gray-100 text-gray-700">页面 9</a>
+                <a href="#" class="page-link block px-3 py-2 rounded-md text-purple-600 bg-purple-50 hover:bg-purple-100 font-medium">页面 8</a>
+                <a href="#" class="page-link block px-3 py-2 rounded-md hover:bg-gray-100 text-gray-700">页面 7</a>
+            </nav>
+        </aside>
+
+        <!-- 中间主内容区：原型预览与版本控制 -->
+        <main class="flex-1 flex flex-col bg-gray-50 overflow-y-auto relative">
+            <!-- 包裹原型预览和版本条的容器 -->
+            <div class="prototype-viewer-container">
+                <!-- 原型预览iframe的直接父容器 -->
+                <div class="prototype-viewer">
+                    <!-- 模拟手机屏幕边框 -->
+                    <div class="prototype-bordered-frame" style="--prototype-scale: 0.92;">
+                        <!-- iframe用于嵌入AI生成的HTML原型 -->
+                        <iframe id="prototypeDisplay" src="about:blank" title="Prototype Display"></iframe>
+                    </div>
+                </div>
+            </div>
+             <!-- 版本控制条悬浮容器 (优化点2) -->
+            <div class="version-controls-sticky-wrapper mt-auto">
+                <!-- 版本号按钮组 -->
+                <div class="flex space-x-2" id="versionControls">
+                    <button data-version="v1" class="version-btn version-button-text px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700">V1</button>
+                    <button data-version="v2" class="version-btn version-button-text px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700">V2</button>
+                    <button data-version="v3" class="version-btn version-button-text px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700">V3</button>
+                    <button data-version="v4" class="version-btn version-button-text px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700">V4</button>
+                    <button data-version="v5" class="version-btn version-button-text px-4 py-2 bg-blue-500 text-white border border-blue-500 rounded-md">V5</button>
+                    <button data-version="v6" class="version-btn version-button-text px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700">V6</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- 右侧边栏：AI对话与精细化控制 -->
+        <aside class="w-96 bg-white border-l border-gray-200 flex flex-col h-full">
+            <!-- 右侧边栏头部 -->
+            <div class="p-4 border-b border-gray-200 flex justify-between items-center flex-shrink-0">
+                <h2 class="right-sidebar-main-title text-gray-800">AI 生成界面</h2>
+                <div class="space-x-3 text-gray-500">
+                    <button class="hover:text-purple-600" title="重新生成"><i class="fas fa-sync-alt text-lg"></i></button>
+                    <button class="hover:text-purple-600" title="设置"><i class="fas fa-cog text-lg"></i></button>
+                    <button class="hover:text-purple-600" title="关闭"><i class="fas fa-times text-lg"></i></button>
+                </div>
+            </div>
+            <!-- 聊天历史和方案选择区域 (可滚动) -->
+            <div class="p-4 space-y-4 overflow-y-auto flex-1" id="chatHistory">
+                <!-- 聊天消息容器 (优化点3) -->
+                <div class="flex flex-col space-y-3">
+                    <!-- 用户消息 -->
+                    <div class="chat-item chat-item-user">
+                        <div class="chat-bubble chat-bubble-user">
+                            <p class="chat-message-text">我要在小程序做一个冲榜活动，页面需要包含实时排名和参与者自己的排名信息展示。页面应简洁明了，易于用户快速查看。</p>
+                        </div>
+                        <div class="chat-avatar chat-avatar-user">
+                            <i class="fas fa-user"></i> {/* 用户头像图标 */}
+                        </div>
+                    </div>
+                    <!-- AI回复 -->
+                    <div class="chat-item chat-item-ai">
+                        <div class="chat-avatar chat-avatar-ai">
+                            <i class="fas fa-robot"></i> {/* AI头像图标 */}
+                        </div>
+                        <div class="chat-bubble chat-bubble-ai">
+                            <p class="chat-message-text">这是根据您的需求生成的“冲榜活动”页面。请查看方案A和方案B。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="right-sidebar-regular-text text-gray-600 mt-4">为您生成了两个方案：</p>
+                <!-- 方案A/B缩略图展示 -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div id="previewA" class="preview-option border-2 border-purple-500 rounded-lg p-2 cursor-pointer hover:shadow-lg">
+                        <img src="https://via.placeholder.com/180x380/E9D5FF/8B5CF6?text=方案A+原型预览" alt="方案 A 缩略图" class="w-full h-auto rounded mb-1 object-contain bg-white">
+                        <p class="right-sidebar-card-title text-center text-purple-700 font-medium">方案 A (选中)</p>
+                    </div>
+                    <div id="previewB" class="preview-option border border-gray-300 rounded-lg p-2 cursor-pointer hover:shadow-lg hover:border-gray-400">
+                        <img src="https://via.placeholder.com/180x380/D1FAE5/10B981?text=方案B+原型预览" alt="方案 B 缩略图" class="w-full h-auto rounded mb-1 object-contain bg-white">
+                        <p class="right-sidebar-card-title text-center text-gray-600">方案 B</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 底部用户输入区域 -->
+            <div class="p-4 border-t border-gray-200 flex-shrink-0">
+                <div class="flex items-center bg-gray-100 rounded-lg p-1">
+                    <button class="p-2 text-gray-500 hover:text-purple-600" title="上传文件"><i class="fas fa-paperclip text-lg"></i></button>
+                    <textarea rows="2" class="chat-input-placeholder flex-1 p-2 bg-transparent focus:outline-none resize-none" placeholder="告诉AI如何修改这个页面吧…"></textarea>
+                    <button class="p-3 text-purple-600 hover:bg-purple-100 rounded-md" title="发送"><i class="fas fa-paper-plane fa-lg"></i></button>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        // DOMContentLoaded确保在HTML完全加载和解析后执行脚本
+        document.addEventListener('DOMContentLoaded', function () {
+            // 获取关键DOM元素
+            const prototypeDisplay = document.getElementById('prototypeDisplay'); // iframe用于显示原型
+            const previewAContainer = document.getElementById('previewA'); // 方案A的缩略图容器
+            const previewBContainer = document.getElementById('previewB'); // 方案B的缩略图容器
+            const previewOptions = document.querySelectorAll('.preview-option'); // 所有方案选项的集合
+            const versionBtns = document.querySelectorAll('.version-btn'); // 所有版本按钮的集合
+
+            // 共享的状态栏HTML，用于注入到所有iframe内容中
+            const statusBarHTML = `
+                <div class="status-bar-ios-mock" style="height: 44px; background-color: #fff; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; font-size: 15px; color: #000; border-bottom: 1px solid #e5e5e5; font-family: 'Roboto', sans-serif;">
+                    <span class="time" style="font-weight: 500;">9:41</span>
+                    <div><i class="fas fa-signal" style="margin-right:4px;"></i><i class="fas fa-wifi" style="margin-right:4px;"></i><i class="fas fa-battery-full"></i></div>
+                </div>`;
+
+            // 示例原型内容：冲榜活动页面 (方案A和V5使用)
+            const rankingPageContent = `
+                <!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+                <link href="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+                <link href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+                <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+                <style>body { margin: 0; font-family: 'Roboto', sans-serif; background-color: #f4f4f6; font-size:14px; display: flex; flex-direction: column; height: 100vh; } .content-scrollable { flex-grow:1; overflow-y:auto; }
+                    /* ... (内嵌的冲榜活动页面的详细样式) ... */
+                    .ranking-header { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; background-color: #fff; border-bottom: 1px solid #e5e5e5;} .ranking-header h1 { font-size: 17px; font-weight: 600; margin:0;} .rules-btn { font-size: 14px; color: #fff; background-color: #5856D6; padding: 4px 12px; border-radius: 15px; font-weight:500;} .banner img { width: 100%; display: block; } .my-rank { background-color: #5856D6; color: white; padding: 16px; border-radius: 10px; margin: 16px; display: flex; align-items: center; justify-content: space-between; } .my-rank img { width: 48px; height: 48px; border-radius: 50%; margin-right: 12px; border: 2px solid white;} .my-rank .info .name { font-size: 17px; font-weight: 600; } .my-rank .info .score { font-size: 14px; opacity: 0.9; } .my-rank .rank-num .num { font-size: 28px; font-weight: 700; } .my-rank .rank-num .label { font-size: 13px; opacity: 0.9; text-align: right; } .top-3-ranks { display: flex; justify-content: space-around; text-align: center; padding: 0 16px 16px; background-color: #fff; } .top-3-ranks .ranker { display:flex; flex-direction: column; align-items:center;} .top-3-ranks img { width: 60px; height: 60px; border-radius: 50%; margin-bottom: 8px; border: 2px solid #ffd700;} .top-3-ranks .ranker.silver img { border-color: #c0c0c0; } .top-3-ranks .ranker.bronze img { border-color: #cd7f32; } .top-3-ranks .name { font-size: 15px; font-weight: 500; margin-bottom: 2px; color: #333;} .top-3-ranks .score { font-size: 13px; color: #666; } .top-3-ranks .crown { color: #ffd700; font-size: 16px; position:relative; top:-65px; left:20px;} .list-item { display: flex; align-items: center; padding: 12px 16px; background-color: #fff; border-bottom: 1px solid #f0f0f0; } .list-item .rank { font-size: 17px; color: #888; width: 30px; text-align:left;} .list-item img { width: 40px; height: 40px; border-radius: 50%; margin-right: 12px; } .list-item .info .name { font-size: 16px; font-weight: 500; color: #333; } .list-item .info .score { font-size: 14px; color: #777; } .list-item .arrow { margin-left: auto; color: #ccc; font-size:18px; }
+                </style></head><body>${statusBarHTML}<div class="content-scrollable">
+                    <div class="ranking-header"><h1>冲榜活动</h1><button class="rules-btn">活动规则</button></div>
+                    <div class="banner"><img src="https://i.imgur.com/2Q5q4gH.jpg" alt="Festival Banner"></div>
+                    <div class="my-rank"><img src="https://i.imgur.com/O3Gz4Xb.jpg" alt="陈美玲"><div class="info"><div class="name">陈美玲</div><div class="score">当前消费: ¥ 8,750</div></div><div class="rank-num"><div class="num">4</div><div class="label">当前排名</div></div></div>
+                    <div class="top-3-ranks"> <!-- ... Top 3 Ranks HTML ... --> </div>
+                    <div class="list-item"> <!-- ... List Item HTML ... --> </div>
+                </div></body></html>`;
+
+            // 示例原型内容：备选方案B
+            const alternativeContent = `
+                <!DOCTYPE html><html><head><meta charset="UTF-8"><link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet"><link href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+                <style>body{display:flex; flex-direction:column; height:100vh;margin:0;font-family:'Roboto',sans-serif;background-color:#e0f0ff;font-size:16px;}
+                .content-wrapper {flex-grow:1; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:20px; overflow-y:auto;}
+                h1{font-size:20px; font-weight:500; color:#007bff;text-align:center;} p {font-size:16px;}</style></head>
+                <body>${statusBarHTML}<div class="content-wrapper"><h1>备选方案 B</h1><p>这是一个完全不同的页面设计，用于对比。</p><img src="https://via.placeholder.com/300x200/007BFF/FFFFFF?text=Alternative+Design" style="border-radius:8px; margin-top:20px;"></div></body></html>`;
+
+            // 函数：获取特定历史版本的内容 (确保也包含状态栏)
+            function getVersionSpecificContent(version) {
+                return `
+                    <!DOCTYPE html><html><head><meta charset="UTF-8"><link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet"><link href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+                    <style>body{font-family:'Roboto',sans-serif;display:flex;flex-direction:column;height:100vh;margin:0;background-color:#fff3e0;}
+                    .content-wrapper{flex-grow:1; display:flex; flex-direction:column; align-items:center;justify-content:center;padding:20px;text-align:center; overflow-y:auto;}
+                    h1{font-size:20px; font-weight:500; color:#ef6c00;} p{font-size:16px;color:#795548;}</style></head>
+                    <body>${statusBarHTML}<div class="content-wrapper"><h1>原型历史版本 ${version.toUpperCase()}</h1><p>这是版本 ${version} 的设计内容，作为历史存档。</p>
+                    <img src="https://via.placeholder.com/300x200/${Math.random().toString(16).substr(-6)}/FFFFFF?text=Version+${version.toUpperCase()}" alt="Version ${version.toUpperCase()}" style="margin-top:20px;max-width:100%;border-radius:8px;">
+                    </div></body></html>`;
+            }
+
+            // 函数：加载原型内容到iframe
+            function loadPrototype(content) {
+                prototypeDisplay.srcdoc = content;
+            }
+            
+            // 页面初始加载时，加载默认原型 (例如V5的冲榜活动)
+            loadPrototype(rankingPageContent);
+            // 设置右侧A/B方案选择缩略图的占位图片
+            document.querySelectorAll('.preview-option img').forEach(img => {
+                const placeholder = img.dataset.srcPlaceholder;
+                if (placeholder) img.src = placeholder; // 使用data-src-placeholder作为图片源
+            });
+
+            // 为右侧的方案A/B选项添加点击事件监听器
+            previewOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // 移除所有选项的选中样式
+                    previewOptions.forEach(opt => {
+                        opt.classList.remove('border-purple-500', 'border-2');
+                        opt.classList.add('border-gray-300', 'border');
+                        opt.querySelector('p').classList.remove('text-purple-700', 'font-medium');
+                        opt.querySelector('p').classList.add('text-gray-600');
+                    });
+                    // 为当前点击的选项添加选中样式
+                    this.classList.add('border-purple-500', 'border-2');
+                    this.classList.remove('border-gray-300', 'border');
+                    this.querySelector('p').classList.add('text-purple-700', 'font-medium');
+                    this.querySelector('p').classList.remove('text-gray-600');
+
+                    // 根据选择加载不同的原型内容到iframe
+                    if (this.id === 'previewA') {
+                        loadPrototype(rankingPageContent); // 加载方案A内容
+                        this.querySelector('p').textContent = '方案 A (选中)';
+                        if(previewBContainer) previewBContainer.querySelector('p').textContent = '方案 B';
+                    } else if (this.id === 'previewB') {
+                        loadPrototype(alternativeContent); // 加载方案B内容
+                        this.querySelector('p').textContent = '方案 B (选中)';
+                        if(previewAContainer) previewAContainer.querySelector('p').textContent = '方案 A';
+                    }
+                });
+            });
+
+            // 为版本按钮添加点击事件监听器
+            versionBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // OPTIMIZATION 1: 正确管理版本按钮的选中样式
+                    versionBtns.forEach(b => {
+                        b.classList.remove('bg-blue-500', 'text-white', 'border-blue-500'); // 移除选中状态的类
+                        b.classList.add('bg-white', 'text-gray-700', 'border-gray-300'); // 添加默认状态的类
+                    });
+                    this.classList.remove('bg-white', 'text-gray-700', 'border-gray-300'); // 移除当前按钮的默认类
+                    this.classList.add('bg-blue-500', 'text-white', 'border-blue-500'); // 添加当前按钮的选中类
+                    
+                    const version = this.dataset.version; // 获取当前点击的版本号
+                    // 根据版本号加载不同的原型内容
+                    if (version === 'v5') {
+                        loadPrototype(rankingPageContent); // V5加载冲榜活动页
+                        if (previewAContainer) previewAContainer.click(); // V5默认选中方案A
+                    } else {
+                        loadPrototype(getVersionSpecificContent(version)); // 其他版本加载通用历史版本内容
+                         // 重置右侧A/B方案的显示文本和样式
+                         if(previewAContainer) previewAContainer.querySelector('p').textContent = '方案 A';
+                         if(previewBContainer) previewBContainer.querySelector('p').textContent = '方案 B';
+                         previewOptions.forEach(opt => {
+                            opt.classList.remove('border-purple-500', 'border-2');
+                            opt.classList.add('border-gray-300', 'border');
+                            opt.querySelector('p').classList.remove('text-purple-700', 'font-medium');
+                            opt.querySelector('p').classList.add('text-gray-600');
+                        });
+                    }
+                });
+            });
+            // 页面加载完成后，默认点击并选中V5版本按钮
+            const v5Button = document.querySelector('.version-btn[data-version="v5"]');
+            if (v5Button) v5Button.click();
+
+        });
+    </script>
+</body>
+</html>

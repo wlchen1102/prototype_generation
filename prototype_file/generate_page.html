@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF--8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI原型-详情
+    </title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F3F4F6; /* A light gray background for the whole page */
+        }
+        .page-item.active {
+            background-color: #e0e7ff; /* Light indigo for active item */
+            color: #3730a3; /* Darker indigo text */
+            font-weight: 500;
+        }
+        .page-item:hover {
+            background-color: #f0f3f7;
+        }
+        .version-btn {
+            @apply py-1.5 px-4 text-xs font-medium text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors;
+        }
+        .version-btn.active {
+            @apply bg-indigo-600 text-white hover:bg-indigo-700;
+        }
+        .chat-bubble-right {
+            position: relative;
+            background: #95EC69; /* User bubble background from reference */
+            border-radius: 12px;
+            padding: 12px;
+            max-width: 70%;
+            /* Tailwind equivalent for text-sm if needed, but direct CSS is fine here */
+            font-size: 0.875rem; /* text-sm */
+            line-height: 1.25rem; /* text-sm */
+            color: black; /* Assuming user text should be black on green background */
+        }
+        .chat-bubble-left {
+            position: relative;
+            background: white; /* AI bubble background from reference */
+            border-radius: 12px;
+            padding: 12px;
+            max-width: 70%;
+            /* Tailwind equivalent for text-sm if needed */
+            font-size: 0.875rem; /* text-sm */
+            line-height: 1.25rem; /* text-sm */
+            color: #374151; /* gray-700 */
+        }
+        .table-container {
+            overflow-x: auto;
+            background: white;
+            border-radius: 8px;
+            margin: 8px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #eee;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f9fa;
+        }
+        /* Custom background for the main content area like in the screenshot */
+        .main-content-bg {
+             background: linear-gradient(135deg, #f3f6fd 0%, #e8effa 100%);
+        }
+        /* 隐藏滚动条但保留滚动功能 */
+        .hide-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none; /* Chrome, Safari and Opera */
+        }
+        /* 手机外框样式 */
+        .iphone-frame {
+            width: 375px;
+            height: 812px;
+            background-color: black;
+            border-radius: 36px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        /* 版本标识样式 */
+        .version-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background-color: #4f46e5;
+            color: white;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            z-index: 30;
+            font-weight: 500;
+        }
+</style>
+</head>
+<body class="flex flex-col h-screen overflow-hidden">
+
+    <!-- Top Bar (Moved to be the first child of body) -->
+    <header class="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-6 shrink-0">
+        <h1 class="text-md font-semibold text-gray-700">
+            <i class="fas fa-magic-wand-sparkles mr-2 text-indigo-500"></i>  AI 生成页面
+        </h1>
+        <div>
+            <!-- Icons from the red box (积分, headphones, etc.) are removed here -->
+        </div>
+    </header>
+
+    <!-- Main Content Area (Three-column Layout) -->
+    <div class="flex flex-1 overflow-hidden main-content-bg"> <!-- Added main-content-bg here -->
+
+        <!-- Left Sidebar -->
+        <aside class="w-56 bg-white border-r border-gray-200 p-4 space-y-3 flex flex-col shrink-0">
+            <button class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-3 rounded-md border border-gray-300 flex items-center justify-center text-sm">
+                <i class="fas fa-plus mr-2"></i> 新页面
+            </button>
+            <nav class="flex-grow overflow-y-auto text-sm">
+                <ul class="space-y-1">
+                    <li><a href="#" class="block px-3 py-1.5 rounded-md text-gray-600 page-item">页面 12</a></li>
+                    <li><a href="#" class="block px-3 py-1.5 rounded-md text-gray-600 page-item active">页面 11</a></li>
+                    <li><a href="#" class="block px-3 py-1.5 rounded-md text-gray-600 page-item">页面 10</a></li>
+                    <li><a href="#" class="block px-3 py-1.5 rounded-md text-gray-600 page-item">页面 9</a></li>
+                    <li><a href="#" class="block px-3 py-1.5 rounded-md text-gray-600 page-item">页面 8</a></li>
+                    <!-- Add more pages as needed -->
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Middle: Mobile Preview and Right: Chat/Interaction Panel are now direct children -->
+        <!-- The wrappers <div class="flex-1 flex flex-col main-content-bg"> and <div class="flex-1 flex overflow-hidden"> are removed by this change -->
+                <!-- Middle: Mobile Preview -->
+                <section class="flex-1 p-6 flex items-start justify-center overflow-y-auto">
+                    <!-- 手机外框，模拟 iPhone -->
+                    <div class="iphone-frame">
+                        <!-- iOS Status Bar -->
+                        <div class="h-[44px] flex items-center justify-between px-4 text-sm text-white z-20 shrink-0">
+                            <span class="font-medium">9:41</span>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-signal"></i>
+                                <i class="fas fa-wifi"></i>
+                                <i class="fas fa-battery-full"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- AI生成内容的渲染区域 -->
+                        <div id="prototype-content" class="flex-1 w-full overflow-y-auto overflow-x-hidden bg-white hide-scrollbar">
+                            <!-- 这里将通过JavaScript动态加载用户选择的原型版本内容 -->
+                            <!-- 默认显示的内容 - 方案A (智能体聊天界面) -->
+                            <div class="prototype-version" data-version="V11" data-option="A">
+                                <!-- 顶部导航栏 (App Navigation) -->
+                                <nav class="w-full h-[44px] flex items-center justify-between px-4 bg-white border-b border-gray-200 z-10 shrink-0">
+                                    <button class="flex items-center text-indigo-600">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </button>
+                                    <span class="text-gray-800 font-medium">智能体</span>
+                                    <button class="flex items-center text-indigo-600">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                </nav>
+                                <!-- 聊天内容区 -->
+                                <main class="w-full px-4 py-4 bg-white">
+                                    <!-- 聊天气泡示例 -->
+                                    <div class="flex justify-end mb-4 gap-2">
+                                        <div class="chat-bubble-right">
+                                            A 业务近一月整体风险情况如何？
+                                        </div>
+                                        <div class="w-[36px] h-[36px] rounded-full bg-gray-100 flex items-center justify-center">
+                                            <i class="fas fa-user-tie text-gray-600"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex mb-4 gap-2">
+                                        <div class="w-[36px] h-[36px] rounded-full bg-indigo-600 flex items-center justify-center">
+                                            <i class="fas fa-robot text-white text-sm"></i>
+                                        </div>
+                                        <div class="chat-bubble-left">
+                                            <div class="text-gray-800">
+                                                <p class="font-medium mb-2">1. 业务规模：</p>
+                                                <p class="ml-4 mb-2">总规模环比微降 2.1% 至 191 亿元，主要受市场波动影响。</p>
+                                                <p class="ml-4">X 部：1 亿元（占比 70.2%）</p>
+                                                <p class="ml-4 mb-2">Y 部：5 亿元（占比 29.8%）</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </main>
+                                <!-- 底部输入栏 -->
+                                <footer class="w-full h-[50px] bg-white border-t border-gray-200 shrink-0">
+                                    <div class="h-[50px] flex items-center px-4 gap-3">
+                                        <button class="w-[32px] h-[32px] flex items-center justify-center text-indigo-600">
+                                            <i class="fas fa-microphone"></i>
+                                        </button>
+                                        <input type="text" class="flex-1 h-[36px] px-4 rounded-full bg-white border border-gray-200 focus:outline-none focus:border-indigo-400" placeholder="输入消息...">
+                                        <button class="w-[32px] h-[32px] flex items-center justify-center text-indigo-600">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </footer>
+                            </div>
+                            
+                            <!-- 方案B (节日活动页面) -->
+                            <div class="prototype-version" data-version="V11" data-option="B" style="display: none;">
+                                <!-- 顶部导航栏 -->
+                                <nav class="w-full h-[44px] flex items-center justify-between px-4 bg-white border-b border-gray-200 z-10 shrink-0">
+                                    <span class="text-gray-800 font-medium">冲鸭活动</span>
+                                    <button class="flex items-center justify-center w-6 h-6 text-indigo-600">
+                                        <i class="fas fa-share-alt"></i>
+                                    </button>
+                                </nav>
+                                
+                                <!-- 活动内容区 -->
+                                <div class="w-full bg-white">
+                                    <!-- 活动banner -->
+                                    <div class="relative">
+                                        <div class="w-full h-[180px] bg-indigo-800 overflow-hidden relative">
+                                            <!-- 节日装饰 -->
+                                            <div class="absolute top-0 left-0 w-full">
+                                                <div class="flex justify-between px-2">
+                                                    <div class="w-full flex justify-between">
+                                                        <div class="w-4 h-16 bg-red-500 rounded-b-full"></div>
+                                                        <div class="w-4 h-12 bg-yellow-500 rounded-b-full"></div>
+                                                        <div class="w-4 h-20 bg-green-500 rounded-b-full"></div>
+                                                        <div class="w-4 h-14 bg-blue-500 rounded-b-full"></div>
+                                                        <div class="w-4 h-18 bg-purple-500 rounded-b-full"></div>
+                                                        <div class="w-4 h-10 bg-red-500 rounded-b-full"></div>
+                                                        <div class="w-4 h-16 bg-yellow-500 rounded-b-full"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- 节日文字 -->
+                                            <div class="absolute inset-0 flex flex-col items-center justify-center text-white">
+                                                <h1 class="text-4xl font-bold mb-2 text-yellow-300 drop-shadow-lg">FESTIVAL</h1>
+                                                <p class="text-sm font-medium">年度冲鸭大赛</p>
+                                                <p class="text-xs mt-1">2024.01.01 - 2024.01.31</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 排行榜 -->
+                                    <div class="p-4">
+                                        <!-- 当前用户 -->
+                                        <div class="bg-indigo-600 rounded-lg p-3 mb-4 text-white flex items-center justify-between">
+                                            <div class="flex items-center">
+                                                <div class="w-10 h-10 rounded-full bg-white overflow-hidden flex items-center justify-center mr-3">
+                                                    <i class="fas fa-user text-indigo-600"></i>
+                                                </div>
+                                                <div>
+                                                    <p class="font-medium">赵海玲</p>
+                                                    <p class="text-xs opacity-80">冲鸭积分：8,750</p>
+                                                </div>
+                                            </div>
+                                            <div class="text-2xl font-bold">4</div>
+                                        </div>
+                                        
+                                        <!-- 前三名 -->
+                                        <div class="flex justify-between mb-6">
+                                            <!-- 第二名 -->
+                                            <div class="flex flex-col items-center">
+                                                <div class="w-12 h-12 rounded-full bg-gray-100 overflow-hidden flex items-center justify-center mb-1 relative">
+                                                    <i class="fas fa-user text-gray-500"></i>
+                                                    <div class="absolute -top-1 -right-1 w-5 h-5 bg-gray-200 rounded-full flex items-center justify-center text-xs font-bold">2</div>
+                                                </div>
+                                                <p class="text-xs font-medium">王明亮</p>
+                                                <p class="text-xs text-gray-500">11,930</p>
+                                            </div>
+                                            
+                                            <!-- 第一名 -->
+                                            <div class="flex flex-col items-center">
+                                                <div class="w-14 h-14 rounded-full bg-yellow-100 overflow-hidden flex items-center justify-center mb-1 relative">
+                                                    <i class="fas fa-user text-yellow-600"></i>
+                                                    <div class="absolute -top-1 -right-1 w-5 h-5 bg-yellow-400 rounded-full flex items-center justify-center text-xs font-bold">1</div>
+                                                </div>
+                                                <p class="text-xs font-medium">张伟华</p>
+                                                <p class="text-xs text-gray-500">12,550</p>
+                                            </div>
+                                            
+                                            <!-- 第三名 -->
+                                            <div class="flex flex-col items-center">
+                                                <div class="w-12 h-12 rounded-full bg-gray-100 overflow-hidden flex items-center justify-center mb-1 relative">
+                                                    <i class="fas fa-user text-gray-500"></i>
+                                                    <div class="absolute -top-1 -right-1 w-5 h-5 bg-gray-200 rounded-full flex items-center justify-center text-xs font-bold">3</div>
+                                                </div>
+                                                <p class="text-xs font-medium">李小明</p>
+                                                <p class="text-xs text-gray-500">10,450</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- 排行列表 -->
+                                        <div class="space-y-3">
+                                            <!-- 第4名 -->
+                                            <div class="flex items-center justify-between p-2 border-b border-gray-100">
+                                                <div class="flex items-center">
+                                                    <div class="w-6 h-6 flex items-center justify-center mr-3 text-gray-500">4</div>
+                                                    <div class="w-8 h-8 rounded-full bg-gray-100 overflow-hidden flex items-center justify-center mr-3">
+                                                        <i class="fas fa-user text-gray-500 text-xs"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-sm font-medium">赵海玲</p>
+                                                        <p class="text-xs text-gray-500">冲鸭积分：8,750</p>
+                                                    </div>
+                                                </div>
+                                                <i class="fas fa-chevron-right text-gray-300"></i>
+                                            </div>
+                                            
+                                            <!-- 第5名 -->
+                                            <div class="flex items-center justify-between p-2 border-b border-gray-100">
+                                                <div class="flex items-center">
+                                                    <div class="w-6 h-6 flex items-center justify-center mr-3 text-gray-500">5</div>
+                                                    <div class="w-8 h-8 rounded-full bg-gray-100 overflow-hidden flex items-center justify-center mr-3">
+                                                        <i class="fas fa-user text-gray-500 text-xs"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-sm font-medium">李明阳</p>
+                                                        <p class="text-xs text-gray-500">冲鸭积分：8,320</p>
+                                                    </div>
+                                                </div>
+                                                <i class="fas fa-chevron-right text-gray-300"></i>
+                                            </div>
+                                            
+                                            <!-- 第6名 -->
+                                            <div class="flex items-center justify-between p-2 border-b border-gray-100">
+                                                <div class="flex items-center">
+                                                    <div class="w-6 h-6 flex items-center justify-center mr-3 text-gray-500">6</div>
+                                                    <div class="w-8 h-8 rounded-full bg-gray-100 overflow-hidden flex items-center justify-center mr-3">
+                                                        <i class="fas fa-user text-gray-500 text-xs"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-sm font-medium">孙雅文</p>
+                                                        <p class="text-xs text-gray-500">冲鸭积分：7,980</p>
+                                                    </div>
+                                                </div>
+                                                <i class="fas fa-chevron-right text-gray-300"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 其他版本的内容将通过JavaScript动态加载 -->
+                        </div>
+                        
+                        <!-- iOS Tab Bar -->
+                        <div class="h-[83px] bg-white border-t border-gray-200 flex items-center justify-around px-6 w-full shrink-0 pb-6">
+                            <button class="flex flex-col items-center text-indigo-600">
+                                <i class="fas fa-comment-dots text-xl"></i>
+                                <span class="text-xs mt-1.5 font-medium">聊天</span>
+                            </button>
+                            <button class="flex flex-col items-center text-gray-400 hover:text-indigo-600 transition-colors">
+                                <i class="far fa-address-book text-xl"></i>
+                                <span class="text-xs mt-1.5">通讯录</span>
+                            </button>
+                            <button class="flex flex-col items-center text-gray-400 hover:text-indigo-600 transition-colors">
+                                <i class="far fa-compass text-xl"></i>
+                                <span class="text-xs mt-1.5">发现</span>
+                            </button>
+                            <button class="flex flex-col items-center text-gray-400 hover:text-indigo-600 transition-colors">
+                                <i class="far fa-user text-xl"></i>
+                                <span class="text-xs mt-1.5">我</span>
+                            </button>
+                        </div>
+                        
+                        <!-- 版本标识 -->
+                        <div id="current-version" class="version-badge">V11-A</div>
+                    </div>
+                </section>
+
+                <!-- Right: Chat/Interaction Panel -->
+                <aside class="w-[380px] bg-white border-l border-gray-200 flex flex-col shrink-0">
+                    <div class="p-4 border-b border-gray-200">
+                        <p class="text-xs text-gray-600 leading-relaxed">为你生成了两个方案，你可以切换选择最满意的结果进行修改。</p>
+                        <div class="flex space-x-3 mt-3">
+                            <!-- Thumbnail Preview A -->
+                            <div class="w-20 h-36 bg-gray-100 rounded-md border border-gray-300 flex flex-col items-center justify-center text-xs text-gray-500 relative cursor-pointer hover:border-indigo-400">
+                                <i class="fas fa-mobile-alt fa-lg mb-1 text-gray-400"></i>
+                                <span>方案 A</span>
+                                <span class="absolute bottom-1 right-1 bg-black bg-opacity-60 text-white px-1 py-0.5 rounded text-[10px] font-medium">V10</span>
+                            </div>
+                            <!-- Thumbnail Preview B -->
+                            <div class="w-20 h-36 bg-gray-100 rounded-md border border-gray-300 flex flex-col items-center justify-center text-xs text-gray-500 relative cursor-pointer hover:border-indigo-400">
+                                <i class="fas fa-mobile-alt fa-lg mb-1 text-gray-400"></i>
+                                <span>方案 B</span>
+                                <span class="absolute bottom-1 right-1 bg-black bg-opacity-60 text-white px-1 py-0.5 rounded text-[10px] font-medium">V10</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-1 p-4 space-y-4 overflow-y-auto text-sm">
+                        <!-- User message -->
+                        <div class="flex justify-end items-start">
+                            <div class="chat-bubble-right">
+                                我发现第二段对话还是有“-”，请去掉掉
+                            </div>
+                            <img src="https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_03.png" alt="User" class="w-8 h-8 rounded-full ml-2 border border-gray-200 shrink-0">
+                        </div>
+                        <!-- AI message -->
+                        <div class="flex items-start">
+                            <img src="https://cdn.jsdelivr.net/gh/alohe/avatars/png/sparkle_02.png" alt="AI" class="w-8 h-8 rounded-full mr-2 border border-indigo-200 shrink-0">
+                            <div class="chat-bubble-left">
+                                修改已完成
+                            </div>
+                        </div>
+                         <!-- Another set of thumbnails (e.g., V11) can be shown here after modification -->
+                         <div class="flex space-x-3 pt-2">
+                            <div class="w-20 h-36 bg-gray-100 rounded-md border-2 border-indigo-400 ring-1 ring-indigo-400 flex flex-col items-center justify-center text-xs text-indigo-600 relative cursor-pointer shadow-md">
+                                <i class="fas fa-mobile-alt fa-lg mb-1"></i>
+                                <span>方案 A</span>
+                                <span class="absolute bottom-1 right-1 bg-indigo-600 text-white px-1 py-0.5 rounded text-[10px] font-medium">V11</span>
+                            </div>
+                             <div class="w-20 h-36 bg-gray-100 rounded-md border border-gray-300 flex flex-col items-center justify-center text-xs text-gray-500 relative cursor-pointer hover:border-indigo-400">
+                                <i class="fas fa-mobile-alt fa-lg mb-1 text-gray-400"></i>
+                                <span>方案 B</span>
+                                <span class="absolute bottom-1 right-1 bg-black bg-opacity-60 text-white px-1 py-0.5 rounded text-[10px] font-medium">V11</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-3 border-t border-gray-200">
+                        <div class="flex items-center bg-gray-50 rounded-lg">
+                            <input type="text" placeholder="告诉我如何修改这个页面吧..." class="flex-1 bg-transparent p-2.5 text-sm text-gray-700 focus:outline-none">
+                            <button class="p-2.5 text-indigo-500 hover:text-indigo-700">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        </div> <!-- Closing the new wrapper for bottom bars -->
+                    </div>
+                </aside>
+        <!-- The closing </div> for the previous "Core Content" wrapper, the entire footer, and the closing </div> for the "Right Pane" wrapper are removed. -->
+        <!-- The <section> (Middle Preview) and <aside> (Right Chat Panel) are now direct children of the main three-column div. -->
+    </div>
+</body>
+<script>
+    // 原型版本切换功能
+    document.addEventListener('DOMContentLoaded', function() {
+        // 获取所有原型缩略图
+        const thumbnails = document.querySelectorAll('.flex.space-x-3 > div');
+        const currentVersionLabel = document.getElementById('current-version');
+        const prototypeContent = document.getElementById('prototype-content');
+        
+        // 为每个缩略图添加点击事件
+        thumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener('click', function() {
+                // 移除所有缩略图的选中状态
+                thumbnails.forEach(t => {
+                    t.classList.remove('border-2', 'border-indigo-400', 'ring-1', 'ring-indigo-400', 'shadow-md');
+                    t.classList.add('border', 'border-gray-300');
+                    
+                    // 重置文本和图标颜色
+                    const icon = t.querySelector('i');
+                    const text = t.querySelector('span:not(.absolute)');
+                    if (icon) icon.classList.add('text-gray-400');
+                    if (text) text.classList.remove('text-indigo-600');
+                    t.classList.add('text-gray-500');
+                    t.classList.remove('text-indigo-600');
+                });
+                
+                // 设置当前缩略图为选中状态
+                this.classList.remove('border', 'border-gray-300');
+                this.classList.add('border-2', 'border-indigo-400', 'ring-1', 'ring-indigo-400', 'shadow-md', 'text-indigo-600');
+                
+                // 更新图标和文本颜色
+                const icon = this.querySelector('i');
+                const text = this.querySelector('span:not(.absolute)');
+                if (icon) icon.classList.remove('text-gray-400');
+                if (text) text.classList.add('text-indigo-600');
+                
+                // 获取版本信息
+                const versionLabel = this.querySelector('.absolute');
+                const option = this.querySelector('span:not(.absolute)').textContent.replace('方案 ', '');
+                const version = versionLabel ? versionLabel.textContent : 'V1';
+                
+                // 更新版本标识
+                currentVersionLabel.textContent = `${version}-${option}`;
+                
+                // 这里可以添加加载对应版本内容的逻辑
+                // 示例：根据版本和选项加载不同内容
+                loadPrototypeVersion(version, option);
+            });
+        });
+        
+        // 加载原型版本的函数
+        function loadPrototypeVersion(version, option) {
+            // 在实际应用中，这里可以通过AJAX请求获取对应版本的内容
+            // 或者从预先定义的内容库中选择
+            
+            // 示例：简单的版本切换逻辑
+            const allVersions = document.querySelectorAll('.prototype-version');
+            allVersions.forEach(v => v.style.display = 'none');
+            
+            // 尝试查找匹配的版本
+            const targetVersion = document.querySelector(`.prototype-version[data-version="${version}"][data-option="${option}"]`);
+            
+            if (targetVersion) {
+                targetVersion.style.display = 'block';
+            } else {
+                // 如果没有找到匹配的版本，显示默认版本
+                const defaultVersion = document.querySelector('.prototype-version');
+                if (defaultVersion) {
+                    defaultVersion.style.display = 'block';
+                    // 更新默认版本的数据属性，以便于后续识别
+                    defaultVersion.setAttribute('data-version', version);
+                    defaultVersion.setAttribute('data-option', option);
+                }
+            }
+        }
+        
+        // 初始化：选中默认的缩略图
+        const defaultThumbnail = document.querySelector('.flex.space-x-3 > div.border-2.border-indigo-400') || 
+                                document.querySelector('.flex.space-x-3 > div');
+        if (defaultThumbnail) {
+            defaultThumbnail.click();
+        }
+    });
+</script>
+</html>

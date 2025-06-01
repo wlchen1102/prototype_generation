@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 原型-新页面</title>
+    <!-- 引入 Tailwind CSS 样式库 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <!-- 引入 Font Awesome 图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* 自定义样式 */
+        body {
+            /* 设置页面整体字体为 Noto Sans SC，如果不可用则使用无衬线字体 */
+            font-family: 'Noto Sans SC', sans-serif;
+            /* 设置页面背景颜色为浅灰色 */
+            background-color: #F3F4F6;
+        }
+        /* 页面列表项选中状态的样式 */
+        .page-item.active {
+            background-color: #e0e7ff; /* 浅靛蓝色背景 */
+            color: #3730a3; /* 深靛蓝色文字 */
+            font-weight: 500; /* 字体加粗 */
+        }
+        /* 页面列表项悬停时的样式 */
+        .page-item:hover {
+            background-color: #f0f3f7;
+        }
+        /* 设备类型按钮选中状态的样式 */
+        .device-btn.active {
+            background-color: #4a5568; /* 深灰色背景 */
+            color: white; /* 白色文字 */
+        }
+        /* 示例提示悬停时的样式 */
+        .example-prompt:hover {
+            border-color: #a5b4fc; /* 浅靛蓝色边框 */
+            cursor: pointer; /* 鼠标指针变为手型 */
+        }
+        /* 闪光图标的样式 */
+        .sparkle-icon {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%; /* 圆形 */
+            /* 径向渐变背景 */
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(166,173,246,0.6) 30%, rgba(130,121,223,0.4) 60%);
+            box-shadow: 0 0 15px rgba(130,121,223,0.5); /* 阴影效果 */
+            text-align: center;
+            line-height: 50px; /* 垂直居中文本或图标 */
+            font-size: 24px; /* 图标大小 */
+            color: #fff; /* 图标颜色 */
+        }
+        /* 主内容区域的自定义背景样式 */
+        .main-content-bg {
+             background: linear-gradient(135deg, #f3f6fd 0%, #e8effa 100%); /* 线性渐变背景 */
+        }
+    </style>
+</head>
+<body class="flex flex-col h-screen overflow-hidden">
+
+    <!-- 顶部栏 -->    
+    <header class="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-6 shrink-0">
+        <!-- 页面标题和图标 -->
+        <h1 class="text-md font-semibold text-gray-700">
+            <i class="fas fa-magic-wand-sparkles mr-2 text-indigo-500"></i> AI 生成页面
+        </h1>
+        <div>
+            <!-- 预留位置，可以放置其他图标 -->
+        </div>
+    </header>
+
+    <!-- 主内容区域容器，flex布局，允许内容滚动 -->
+    <div class="flex flex-1 overflow-hidden main-content-bg">
+        <!-- 左侧边栏：页面列表 -->
+    <aside class="w-56 bg-white border-r border-gray-200 p-4 space-y-3 flex flex-col shrink-0">
+        <!-- 新建页面按钮 -->
+        <button class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-3 rounded-md border border-gray-300 flex items-center justify-center text-sm">
+            <i class="fas fa-plus mr-2"></i> 新页面
+        </button>
+        <!-- 页面列表导航 -->
+        <nav class="flex-grow overflow-y-auto text-sm">
+            <ul class="space-y-1">
+                <!-- 页面列表项，active类表示当前选中 -->
+                <li><a href="#" class="block px-3 py-1.5 rounded-md text-gray-600 page-item active">页面 12</a></li>
+                <li><a href="#" class="block px-3 py-1.5 rounded-md text-gray-600 page-item">页面 11</a></li>
+                <li><a href="#" class="block px-3 py-1.5 rounded-md text-gray-600 page-item">页面 10</a></li>
+                <li><a href="#" class="block px-3 py-1.5 rounded-md text-gray-600 page-item">页面 9</a></li>
+                <li><a href="#" class="block px-3 py-1.5 rounded-md text-gray-600 page-item">页面 8</a></li>
+                <li><a href="#" class="block px-3 py-1.5 rounded-md text-gray-600 page-item">页面 7</a></li>
+                <li><a href="#" class="block px-3 py-1.5 rounded-md text-gray-600 page-item">页面 6</a></li>
+                <li><a href="#" class="block px-3 py-1.5 rounded-md text-gray-600 page-item">页面 5</a></li>
+                <li><a href="#" class="block px-3 py-1.5 rounded-md text-gray-600 page-item">页面 4</a></li>
+                <li><a href="#" class="block px-3 py-1.5 rounded-md text-gray-600 page-item">页面 3</a></li>
+                <li><a href="#" class="block px-3 py-1.5 rounded-md text-gray-600 page-item">页面 2</a></li>
+                <li><a href="#" class="block px-3 py-1.5 rounded-md text-gray-600 page-item">页面 1</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- 主内容区域：AI生成界面输入和示例 -->
+    <main class="flex-1 flex flex-col items-center justify-center p-8 overflow-y-auto">
+        <div class="w-full max-w-2xl">
+            <!-- 闪光图标和标语 -->
+            <div class="text-center mb-8">
+                <div class="inline-block sparkle-icon mb-3">
+                     <i class="fas fa-wand-magic-sparkles"></i>
+                </div>
+                <p class="text-lg text-gray-600">输入描述，一键生成界面设计（移动端）</p>
+            </div>
+
+            <!-- 设备类型选择器 (已移除) -->
+            <!-- Removed device type selector buttons -->
+
+            <!-- 输入区域卡片 -->
+            <div class="bg-white p-6 rounded-xl shadow-xl">
+                <!-- 文本输入框 -->
+                <textarea class="w-full h-28 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:border-transparent resize-none"
+                          placeholder="简单描述您想要的界面或功能\n支持上传截图作为参考"></textarea>
+                
+                <!-- 底部按钮区域 -->
+                <div class="flex items-center justify-between mt-3">
+                    <div class="flex items-center space-x-2">
+                        <!-- HTML格式选择按钮 -->
+                        <button class="text-gray-600 hover:text-indigo-600 p-2 rounded-md bg-gray-100 hover:bg-gray-200">
+                            <i class="fas fa-code mr-1"></i> HTML <i class="fas fa-chevron-down fa-xs ml-1"></i>
+                        </button>
+                        <!-- 调色板、太阳和裁剪图标按钮 (已移除) -->
+                        <!-- Removed palette, sun, and crop-alt icon buttons -->
+                    </div>
+                    <!-- 发送按钮 -->
+                    <button class="bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-lg w-10 h-10 flex items-center justify-center shadow-md hover:shadow-lg transition-shadow">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 示例提示区域 -->
+            <div class="mt-8">
+                <!-- 示例提示头部 -->
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-sm font-semibold text-gray-700">试试选一个</h3>
+                    <!-- 换一批按钮 -->
+                    <a href="#" class="text-sm text-indigo-600 hover:text-indigo-800">
+                        换一批 <i class="fas fa-sync-alt fa-sm"></i>
+                    </a>
+                </div>
+                <!-- 示例提示列表 -->
+                <div class="space-y-3">
+                    <!-- 示例提示项 1 -->
+                    <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm example-prompt">
+                        <p class="text-sm text-gray-700"><i class="fas fa-lightbulb text-yellow-400 mr-2"></i>电影详情页设计：全屏背景展示电影海报，左上角设返回按钮，海报上包含基础信息（名称、评分、类型），下方有剧情简介和演职员列表。</p>
+                    </div>
+                    <!-- 示例提示项 2 -->
+                    <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm example-prompt">
+                        <p class="text-sm text-gray-700"><i class="fas fa-lightbulb text-yellow-400 mr-2"></i>一个电商App的商品列表页，每行展示两个商品，包含商品图、名称、价格和加入购物车按钮。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    </div>
+</body>
+</html>
