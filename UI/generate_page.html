@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF--8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI原型-详情
+    </title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F3F4F6; /* A light gray background for the whole page */
+        }
+        .page-item.active {
+            background-color: #e0e7ff; /* Light indigo for active item */
+            color: #3730a3; /* Darker indigo text */
+            font-weight: 500;
+        }
+        .page-item:hover {
+            background-color: #f0f3f7;
+        }
+        .version-btn {
+            @apply py-1.5 px-4 text-xs font-medium text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors;
+        }
+        .version-btn.active {
+            @apply bg-indigo-600 text-white hover:bg-indigo-700;
+        }
+        .chat-bubble-right {
+            position: relative;
+            background: #95EC69; /* User bubble background from reference */
+            border-radius: 12px;
+            padding: 12px;
+            max-width: 85%; /* 自适应宽度 */
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            /* Tailwind equivalent for text-sm if needed, but direct CSS is fine here */
+            font-size: 0.875rem; /* text-sm */
+            line-height: 1.25rem; /* text-sm */
+            color: black; /* Assuming user text should be black on green background */
+        }
+        .chat-bubble-left {
+            position: relative;
+            background: white; /* AI bubble background from reference */
+            border-radius: 12px;
+            padding: 12px;
+            max-width: 85%; /* 自适应宽度 */
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            /* Tailwind equivalent for text-sm if needed */
+            font-size: 0.875rem; /* text-sm */
+            line-height: 1.25rem; /* text-sm */
+            color: #374151; /* gray-700 */
+        }
+        .table-container {
+            overflow-x: auto;
+            background: white;
+            border-radius: 8px;
+            margin: 8px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #eee;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f9fa;
+        }
+        /* Custom background for the main content area like in the screenshot */
+        .main-content-bg {
+             background: linear-gradient(135deg, #f3f6fd 0%, #e8effa 100%);
+        }
+        /* 隐藏滚动条但保留滚动功能 */
+        .hide-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none; /* Chrome, Safari and Opera */
+        }
+        /* 手机外框样式 */
+        .mockup-border { 
+            width: 375px; 
+            height: 760px; 
+            background: #000; 
+            border-radius: 30px; 
+            padding: 6px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.25); 
+        }
+        .mockup-screen { 
+            width: 100%; 
+            height: 100%; 
+            background: #f6f6f6; 
+            border-radius: 24px; 
+            overflow: hidden; 
+            position: relative; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        .content-area::-webkit-scrollbar { 
+            display: none; 
+        }
+        .content-area { 
+            scrollbar-width: none; 
+            -ms-overflow-style: none; 
+        }
+        /* 版本标识样式 */
+        .version-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background-color: #4f46e5;
+            color: white;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            z-index: 30;
+            font-weight: 500;
+        }
+        /* 使每个原型版本充满可视区域并采用列布局，确保 footer 固定在底部 */
+        .prototype-version {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="flex flex-col h-screen overflow-hidden">
+
+    <!-- Top Bar (Moved to be the first child of body) -->
+    <header class="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-6 shrink-0">
+        <h1 class="text-md font-semibold text-gray-700">
+            <i class="fas fa-magic-wand-sparkles mr-2 text-indigo-500"></i>  AI 生成页面
+        </h1>
+        <div>
+            <!-- Icons from the red box (积分, headphones, etc.) are removed here -->
+        </div>
+    </header>
+
+    <!-- Main Content Area (Three-column Layout) -->
+    <div class="flex flex-1 overflow-hidden main-content-bg"> <!-- Added main-content-bg here -->
+
+        <!-- Left Sidebar -->
+        <aside class="bg-white border-r border-gray-200 p-4 space-y-3 flex flex-col shrink-0" style="width: 20%; min-width: 200px;">
+            <button class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-3 rounded-md border border-gray-300 flex items-center justify-center text-sm">
+                <i class="fas fa-plus mr-2"></i> 新页面
+            </button>
+            <nav class="flex-grow overflow-y-auto text-sm">
+                <ul class="space-y-1">
+                    <li><a href="#" class="block px-3 py-1.5 rounded-md text-gray-600 page-item active">页面 12</a></li>
+                    <li><a href="#" class="block px-3 py-1.5 rounded-md text-gray-600 page-item">页面 11</a></li>
+                    <li><a href="#" class="block px-3 py-1.5 rounded-md text-gray-600 page-item">页面 10</a></li>
+                    <li><a href="#" class="block px-3 py-1.5 rounded-md text-gray-600 page-item">页面 9</a></li>
+                    <li><a href="#" class="block px-3 py-1.5 rounded-md text-gray-600 page-item">页面 8</a></li>
+                    <!-- Add more pages as needed -->
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Middle: Mobile Preview and Right: Chat/Interaction Panel are now direct children -->
+        <!-- The wrappers <div class="flex-1 flex flex-col main-content-bg"> and <div class="flex-1 flex overflow-hidden"> are removed by this change -->
+                <!-- Middle: Mobile Preview -->
+                <section class="p-6 flex items-center justify-center overflow-y-auto relative" style="width: 55%; min-width: 300px;">
+                    <!-- 手机Mockup外框 -->
+                    <div class="mockup-border">
+                        <div class="mockup-screen">
+                            <!-- AI生成内容的渲染区域 -->
+                            <div id="prototype-content" class="w-full h-full overflow-y-auto overflow-x-hidden bg-white content-area">
+                                <!-- 这里将通过JavaScript动态加载用户选择的原型版本内容 -->
+                                <!-- 默认显示的内容 - 方案A (思维卡片页面) -->
+                                <div class="prototype-version" data-version="V11" data-option="A">
+                                    <!-- 状态栏 -->
+                                    <div class="flex justify-between items-center px-6 py-2 bg-white/90 backdrop-blur-sm">
+                                        <span class="text-sm font-medium">9:41</span>
+                                        <div class="flex items-center space-x-1">
+                                            <i class="fas fa-signal text-sm"></i>
+                                            <i class="fas fa-wifi text-sm"></i>
+                                            <i class="fas fa-battery-three-quarters text-sm"></i>
+                                        </div>
+                                    </div>
+
+                                    <!-- 标题栏 -->
+                                    <div class="flex justify-between items-center px-6 py-4 bg-white/90 backdrop-blur-sm border-b border-gray-100">
+                                        <h1 class="text-2xl font-bold text-gray-800">思维卡片</h1>
+                                        <button class="p-2 rounded-full hover:bg-gray-100">
+                                            <i class="fas fa-search text-gray-600 text-lg"></i>
+                                        </button>
+                                    </div>
+
+                                    <!-- 搜索区域 -->
+                                    <div class="px-6 py-4 bg-white">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="flex-1 relative">
+                                                <input type="text" 
+                                                       placeholder="搜索卡片、标签..." 
+                                                       class="w-full px-4 py-3 bg-gray-50 rounded-xl border-0 focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all">
+                                                <i class="fas fa-search absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                            </div>
+                                            <button class="p-3 bg-gray-50 rounded-xl hover:bg-gray-100">
+                                                <i class="fas fa-filter text-gray-600"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- 卡片列表区域 -->
+                                    <div class="flex-1 px-6 py-4 overflow-y-auto hide-scrollbar">
+                                        <!-- 卡片1 -->
+                                        <div class="bg-white rounded-2xl p-5 mb-4 shadow-sm border border-gray-100">
+                                            <div class="flex justify-between items-start mb-3">
+                                                <h3 class="text-lg font-semibold text-gray-800 line-clamp-2">卢曼卡片笔记法的核心原理</h3>
+                                                <div class="flex items-center text-sm text-gray-500">
+                                                    <i class="fas fa-link text-xs mr-1"></i>
+                                                    <span>3</span>
+                                                </div>
+                                            </div>
+                                            <p class="text-gray-600 text-sm mb-3 line-clamp-2">
+                                                卢曼的卡片笔记系统不仅仅是信息的存储，更是思维的延伸。每张卡片都应该包含一个完整的想法...
+                                            </p>
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex flex-wrap gap-2">
+                                                    <span class="px-3 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">#知识管理</span>
+                                                    <span class="px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full">#卢曼方法</span>
+                                                    <span class="px-3 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">#思维工具</span>
+                                                </div>
+                                                <span class="text-xs text-gray-400">2小时前</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- 卡片2 -->
+                                        <div class="bg-white rounded-2xl p-5 mb-4 shadow-sm border border-gray-100">
+                                            <div class="flex justify-between items-start mb-3">
+                                                <h3 class="text-lg font-semibold text-gray-800 line-clamp-2">双向链接的价值与实现</h3>
+                                                <div class="flex items-center text-sm text-gray-500">
+                                                    <i class="fas fa-link text-xs mr-1"></i>
+                                                    <span>7</span>
+                                                </div>
+                                            </div>
+                                            <p class="text-gray-600 text-sm mb-3 line-clamp-2">
+                                                双向链接让知识点之间形成网状结构，而不是传统的树状层级。这种连接方式更符合人类思维的特点...
+                                            </p>
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex flex-wrap gap-2">
+                                                    <span class="px-3 py-1 bg-orange-100 text-orange-700 text-xs rounded-full">#双向链接</span>
+                                                    <span class="px-3 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">#知识网络</span>
+                                                </div>
+                                                <span class="text-xs text-gray-400">1天前</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- 卡片3 -->
+                                        <div class="bg-white rounded-2xl p-5 mb-4 shadow-sm border border-gray-100">
+                                            <div class="flex justify-between items-start mb-3">
+                                                <h3 class="text-lg font-semibold text-gray-800 line-clamp-2">标签系统的设计原则</h3>
+                                                <div class="flex items-center text-sm text-gray-500">
+                                                    <i class="fas fa-link text-xs mr-1"></i>
+                                                    <span>2</span>
+                                                </div>
+                                            </div>
+                                            <p class="text-gray-600 text-sm mb-3 line-clamp-2">
+                                                好的标签系统应该是有机的、可进化的。不要一开始就设计复杂的分类体系，而应该让标签自然生长...
+                                            </p>
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex flex-wrap gap-2">
+                                                    <span class="px-3 py-1 bg-red-100 text-red-700 text-xs rounded-full">#标签设计</span>
+                                                    <span class="px-3 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-full">#信息架构</span>
+                                                </div>
+                                                <span class="text-xs text-gray-400">3天前</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- 卡片4 -->
+                                        <div class="bg-white rounded-2xl p-5 mb-4 shadow-sm border border-gray-100">
+                                            <div class="flex justify-between items-start mb-3">
+                                                <h3 class="text-lg font-semibold text-gray-800 line-clamp-2">渐进式笔记法的实践</h3>
+                                                <div class="flex items-center text-sm text-gray-500">
+                                                    <i class="fas fa-link text-xs mr-1"></i>
+                                                    <span>1</span>
+                                                </div>
+                                            </div>
+                                            <p class="text-gray-600 text-sm mb-3 line-clamp-2">
+                                                不要试图一次性写出完美的笔记。先记录核心观点，然后在后续的思考中不断完善和连接...
+                                            </p>
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex flex-wrap gap-2">
+                                                    <span class="px-3 py-1 bg-indigo-100 text-indigo-700 text-xs rounded-full">#渐进式</span>
+                                                    <span class="px-3 py-1 bg-pink-100 text-pink-700 text-xs rounded-full">#实践方法</span>
+                                                </div>
+                                                <span class="text-xs text-gray-400">1周前</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 方案B (购物车页面) -->
+                                <div class="prototype-version" data-version="V11" data-option="B" style="display: none;">
+                                    <!-- 状态栏 -->
+                                    <div class="flex justify-between items-center px-6 py-2 bg-white/90 backdrop-blur-sm">
+                                        <span class="text-sm font-medium">9:41</span>
+                                        <div class="flex items-center space-x-1">
+                                            <i class="fas fa-signal text-sm"></i>
+                                            <i class="fas fa-wifi text-sm"></i>
+                                            <i class="fas fa-battery-three-quarters text-sm"></i>
+                                        </div>
+                                    </div>
+                                    <!-- Header -->
+                                    <div class="flex items-center justify-between px-4 py-3 bg-white shadow-sm">
+                                        <button class="text-gray-500"><i class="fas fa-arrow-left"></i></button>
+                                        <span class="font-semibold text-lg">购物车</span>
+                                        <button class="text-blue-600 font-medium">编辑</button>
+                                    </div>
+                                    <!-- Content -->
+                                    <div class="flex-1 overflow-y-auto px-2 py-2 space-y-4">
+                                        <!-- 店铺分组示例 -->
+                                        <div class="bg-white rounded-lg shadow p-3">
+                                            <div class="flex items-center mb-2">
+                                                <input type="checkbox" class="mr-2">
+                                                <span class="font-medium">优选自营店</span>
+                                            </div>
+                                            <!-- 商品项 -->
+                                            <div class="space-y-3">
+                                                <div class="flex items-center border-b pb-3">
+                                                    <input type="checkbox" class="mr-2">
+                                                    <img src="https://placehold.co/64x64?text=IMG&radius=32" class="w-14 h-14 rounded object-cover mr-3">
+                                                    <div class="flex-1">
+                                                        <div class="font-medium text-gray-800">无线蓝牙耳机</div>
+                                                        <div class="text-xs text-gray-400">黑色 / 标准版</div>
+                                                        <div class="flex items-center mt-1">
+                                                            <span class="text-red-500 font-bold mr-2">¥299</span>
+                                                            <div class="flex items-center ml-auto">
+                                                                <button class="w-6 h-6 flex items-center justify-center border rounded text-gray-500">-</button>
+                                                                <span class="mx-2">1</span>
+                                                                <button class="w-6 h-6 flex items-center justify-center border rounded text-gray-500">+</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- 售罄商品示例 -->
+                                                <div class="flex items-center opacity-60 relative">
+                                                    <input type="checkbox" class="mr-2" disabled>
+                                                    <img src="https://placehold.co/64x64?text=IMG&radius=32" class="w-14 h-14 rounded object-cover mr-3">
+                                                    <div class="flex-1">
+                                                        <div class="font-medium text-gray-800">限量运动手表</div>
+                                                        <div class="text-xs text-gray-400">红色 / 限量版</div>
+                                                        <div class="flex items-center mt-1">
+                                                            <span class="text-gray-400 font-bold mr-2">¥499</span>
+                                                            <div class="flex items-center ml-auto">
+                                                                <button class="w-6 h-6 flex items-center justify-center border rounded text-gray-300" disabled>-</button>
+                                                                <span class="mx-2">1</span>
+                                                                <button class="w-6 h-6 flex items-center justify-center border rounded text-gray-300" disabled>+</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <span class="absolute right-2 top-2 bg-gray-300 text-xs text-white px-2 py-0.5 rounded">已售罄</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Footer -->
+                                    <div class="bg-white px-4 py-3 shadow flex items-center">
+                                        <input type="checkbox" class="mr-2">
+                                        <span class="text-gray-700">全选</span>
+                                        <span class="ml-auto text-gray-700">合计: <span class="text-red-500 font-bold">¥299</span></span>
+                                        <button class="ml-4 bg-blue-500 text-white px-6 py-2 rounded-full font-semibold">结算(1)</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Version History Controls (Bottom Left of Middle Section) -->
+                    <div class="fixed bottom-6 flex items-center space-x-2 z-10" style="left: calc(20% + 24px); bottom: 24px;">
+                        <div class="bg-white rounded-lg shadow-lg border border-gray-200 px-3 py-2 flex items-center space-x-2">
+                            <span class="text-xs text-gray-500 font-medium">版本:</span>
+                            <div class="flex items-center space-x-1">
+                                <button class="version-tab px-2 py-1 text-xs rounded bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors" data-version="1">V1</button>
+                                <button class="version-tab px-2 py-1 text-xs rounded bg-blue-500 text-white font-medium" data-version="2">V2</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Right: Chat/Interaction Panel -->
+                <aside class="bg-white border-l border-gray-200 flex flex-col shrink-0" style="width: 25%; min-width: 280px;">
+                    <div class="p-4 border-b border-gray-200 overflow-hidden">
+                        <!-- User initial input -->
+                        <div class="flex justify-end items-start mb-3">
+                            <div class="chat-bubble-right">
+                                帮我做一个思维卡片笔记页面
+                            </div>
+                            <img src="https://placehold.co/32x32?text=U&radius=16" alt="User" class="w-8 h-8 rounded-full ml-2 border border-gray-200 shrink-0">
+                        </div>
+                        <!-- AI message -->
+                        <div class="flex items-start mb-3">
+                            <img src="https://placehold.co/32x32?text=AI&radius=16" alt="AI" class="w-8 h-8 rounded-full mr-2 border border-indigo-200 shrink-0">
+                            <div class="chat-bubble-left">
+                                为你生成了两个方案，你可以切换选择最满意的结果进行修改。
+                            </div>
+                        </div>
+                        <div class="flex space-x-3 mt-3 overflow-x-auto">
+                            <!-- Thumbnail Preview A -->
+                            <div class="w-20 h-36 bg-gray-100 rounded-md border border-gray-300 flex flex-col items-center justify-center text-xs text-gray-500 relative cursor-pointer hover:border-indigo-400">
+                                <i class="fas fa-mobile-alt fa-lg mb-1 text-gray-400"></i>
+                                <span>方案 A</span>
+                                <span class="absolute bottom-1 right-1 bg-black bg-opacity-60 text-white px-1 py-0.5 rounded text-[10px] font-medium">V1</span>
+                            </div>
+                            <!-- Thumbnail Preview B -->
+                            <div class="w-20 h-36 bg-gray-100 rounded-md border border-gray-300 flex flex-col items-center justify-center text-xs text-gray-500 relative cursor-pointer hover:border-indigo-400">
+                                <i class="fas fa-mobile-alt fa-lg mb-1 text-gray-400"></i>
+                                <span>方案 B</span>
+                                <span class="absolute bottom-1 right-1 bg-black bg-opacity-60 text-white px-1 py-0.5 rounded text-[10px] font-medium">V1</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 space-y-4 overflow-y-auto text-sm border-t border-gray-200 overflow-x-hidden">
+                        <!-- User message -->
+                        <div class="flex justify-end items-start">
+                            <div class="chat-bubble-right">
+                                我感觉不够满意，请修改一下
+                            </div>
+                            <img src="https://placehold.co/32x32?text=U&radius=16" alt="User" class="w-8 h-8 rounded-full ml-2 border border-gray-200 shrink-0">
+                        </div>
+                        <!-- AI message -->
+                        <div class="flex items-start">
+                            <img src="https://placehold.co/32x32?text=AI&radius=16" alt="AI" class="w-8 h-8 rounded-full mr-2 border border-indigo-200 shrink-0">
+                            <div class="chat-bubble-left">
+                                修改已完成
+                            </div>
+                        </div>
+                         <!-- Another set of thumbnails (e.g., V11) can be shown here after modification -->
+                         <div class="flex space-x-3 pt-2 overflow-x-auto">
+                            <div class="w-20 h-36 bg-gray-100 rounded-md border-2 border-indigo-400 ring-1 ring-indigo-400 flex flex-col items-center justify-center text-xs text-indigo-600 relative cursor-pointer shadow-md">
+                                <i class="fas fa-mobile-alt fa-lg mb-1"></i>
+                                <span>方案 A</span>
+                                <span class="absolute bottom-1 right-1 bg-indigo-600 text-white px-1 py-0.5 rounded text-[10px] font-medium">V2</span>
+                            </div>
+                             <div class="w-20 h-36 bg-gray-100 rounded-md border border-gray-300 flex flex-col items-center justify-center text-xs text-gray-500 relative cursor-pointer hover:border-indigo-400">
+                                <i class="fas fa-mobile-alt fa-lg mb-1 text-gray-400"></i>
+                                <span>方案 B</span>
+                                <span class="absolute bottom-1 right-1 bg-black bg-opacity-60 text-white px-1 py-0.5 rounded text-[10px] font-medium">V2</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-3 border-t border-gray-200 overflow-hidden">
+                        <div class="flex items-center bg-gray-50 rounded-lg">
+                            <input type="text" placeholder="告诉我如何修改这个页面吧..." class="flex-1 bg-transparent p-2.5 text-sm text-gray-700 focus:outline-none">
+                            <button class="p-2.5 text-indigo-500 hover:text-indigo-700">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        </div> <!-- Closing the new wrapper for bottom bars -->
+                    </div>
+                </aside>
+        <!-- The closing </div> for the previous "Core Content" wrapper, the entire footer, and the closing </div> for the "Right Pane" wrapper are removed. -->
+        <!-- The <section> (Middle Preview) and <aside> (Right Chat Panel) are now direct children of the main three-column div. -->
+    </div>
+</body>
+<script>
+    // 原型版本切换功能
+    document.addEventListener('DOMContentLoaded', function() {
+        // 获取所有原型缩略图
+        const thumbnails = document.querySelectorAll('.flex.space-x-3 > div');
+        const prototypeContent = document.getElementById('prototype-content');
+        
+        // 为每个缩略图添加点击事件
+        thumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener('click', function() {
+                // 移除所有缩略图的选中状态
+                thumbnails.forEach(t => {
+                    t.classList.remove('border-2', 'border-indigo-400', 'ring-1', 'ring-indigo-400', 'shadow-md');
+                    t.classList.add('border', 'border-gray-300');
+                    
+                    // 重置文本和图标颜色
+                    const icon = t.querySelector('i');
+                    const text = t.querySelector('span:not(.absolute)');
+                    if (icon) icon.classList.add('text-gray-400');
+                    if (text) text.classList.remove('text-indigo-600');
+                    t.classList.add('text-gray-500');
+                    t.classList.remove('text-indigo-600');
+                });
+                
+                // 设置当前缩略图为选中状态
+                this.classList.remove('border', 'border-gray-300');
+                this.classList.add('border-2', 'border-indigo-400', 'ring-1', 'ring-indigo-400', 'shadow-md', 'text-indigo-600');
+                
+                // 更新图标和文本颜色
+                const icon = this.querySelector('i');
+                const text = this.querySelector('span:not(.absolute)');
+                if (icon) icon.classList.remove('text-gray-400');
+                if (text) text.classList.add('text-indigo-600');
+                
+                // 获取版本信息
+                const option = this.querySelector('span:not(.absolute)').textContent.replace('方案 ', '');
+                
+                // 加载对应版本内容
+                loadPrototypeVersion(option);
+            });
+        });
+        
+        // 加载原型版本的函数
+        function loadPrototypeVersion(option) {
+            // 隐藏所有版本
+            const allVersions = document.querySelectorAll('.prototype-version');
+            allVersions.forEach(v => v.style.display = 'none');
+            
+            // 显示对应的版本
+            const targetVersion = document.querySelector(`.prototype-version[data-option="${option}"]`);
+            if (targetVersion) {
+                targetVersion.style.display = 'flex';
+            }
+        }
+        
+        // 初始化：选中最新版本的方案A
+        function selectLatestVersionSchemeA() {
+            // 找到最新版本的方案A缩略图
+            const allThumbnailGroups = document.querySelectorAll('.flex.space-x-3');
+            let latestVersionGroup = null;
+            let maxVersion = 0;
+            
+            allThumbnailGroups.forEach(group => {
+                const versionSpan = group.querySelector('span[class*="bg-indigo-600"], span[class*="bg-black"]');
+                if (versionSpan) {
+                    const versionText = versionSpan.textContent;
+                    const versionNum = parseInt(versionText.replace('V', ''));
+                    if (versionNum > maxVersion) {
+                        maxVersion = versionNum;
+                        latestVersionGroup = group;
+                    }
+                }
+            });
+            
+            // 选中最新版本的方案A
+            if (latestVersionGroup) {
+                const schemeA = latestVersionGroup.querySelector('div:first-child');
+                if (schemeA) {
+                    schemeA.click();
+                }
+            }
+        }
+        
+        // 延迟执行，确保版本控件已经初始化
+        setTimeout(selectLatestVersionSchemeA, 100);
+    });
+
+    // 版本历史切换功能
+    document.addEventListener('DOMContentLoaded', function() {
+        const versionTabs = document.querySelectorAll('.version-tab');
+        
+        versionTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const version = this.getAttribute('data-version');
+                
+                // 移除所有版本标签的选中状态
+                versionTabs.forEach(t => {
+                    t.classList.remove('bg-blue-500', 'text-white', 'font-medium');
+                    t.classList.add('bg-gray-100', 'text-gray-600');
+                });
+                
+                // 设置当前版本标签为选中状态
+                this.classList.remove('bg-gray-100', 'text-gray-600');
+                this.classList.add('bg-blue-500', 'text-white', 'font-medium');
+                
+                // 这里可以添加切换到对应版本的逻辑
+                console.log(`切换到版本 V${version}`);
+                
+                // 可以在这里添加版本切换的具体实现
+                // 例如：loadVersionContent(version);
+            });
+        });
+        
+        // 初始化：默认选中最新版本
+        const allVersions = document.querySelectorAll('.version-tab');
+        if (allVersions.length > 0) {
+            // 找到版本号最大的版本（最新版本）
+            let maxVersion = 0;
+            let latestVersionTab = null;
+            
+            allVersions.forEach(tab => {
+                const version = parseInt(tab.getAttribute('data-version'));
+                if (version > maxVersion) {
+                    maxVersion = version;
+                    latestVersionTab = tab;
+                }
+            });
+            
+            // 点击最新版本
+            if (latestVersionTab) {
+                latestVersionTab.click();
+            }
+        }
+    });
+</script>
+</html>
