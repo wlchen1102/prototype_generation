@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>餐饮点单页面 - 方案A</title>
+    
+    <!-- CSS 框架 -->
+    <link href="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Mermaid for 用户流程图 -->
+    <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/mermaid/8.14.0/mermaid.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Noto Sans SC', Tahoma, Arial, Roboto, "Droid Sans", "Helvetica Neue", "Droid Sans Fallback", "Heiti SC", "Hiragino Sans GB", Simsun, sans-serif;
+        }
+        
+        /* 移动端优先响应式设计 */
+        .mobile-container {
+            max-width: 375px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: #fff;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ff6b35;
+            border-radius: 2px;
+        }
+        
+        /* 动画效果 */
+        .bounce-in {
+            animation: bounceIn 0.3s ease-out;
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .slide-up {
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        /* 菜品项悬停效果 */
+        .menu-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.15);
+        }
+        
+        /* 购物车悬浮按钮 */
+        .cart-float {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: linear-gradient(135deg, #ff6b35, #ff8c42);
+            box-shadow: 0 4px 16px rgba(255, 107, 53, 0.3);
+        }
+        
+        /* 分类标签活跃状态 */
+        .category-active {
+            background: #ff6b35;
+            color: white;
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+        }
+        
+        /* 数量徽章 */
+        .quantity-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        /* 底部结算栏固定 */
+        .checkout-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 375px;
+            background: linear-gradient(135deg, #ff6b35, #ff8c42);
+            z-index: 1000;
+        }
+        
+        /* 加减按钮样式 */
+        .quantity-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+        
+        .quantity-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        /* 图片懒加载效果 */
+        .menu-image {
+            transition: opacity 0.3s ease;
+            background: linear-gradient(45deg, #f3f4f6, #e5e7eb);
+        }
+        
+        .menu-image.loaded {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="mobile-container">
+        <!-- 需求分析与设计说明部分 -->
+        <div class="bg-white p-6 border-b">
+            <h1 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-utensils text-orange-500 mr-3"></i>
+                餐饮点单页面设计 - 方案A
+            </h1>
+            
+            <!-- 核心痛点分析 -->
+            <div class="mb-6">
+                <h2 class="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+                    <i class="fas fa-bullseye text-red-500 mr-2"></i>
+                    核心痛点分析
+                </h2>
+                <div class="grid gap-3">
+                    <div class="bg-red-50 p-3 rounded-lg border-l-4 border-red-400">
+                        <h3 class="font-medium text-red-800">选择困难症</h3>
+                        <p class="text-sm text-red-600">菜品众多，用户难以快速找到心仪美食</p>
+                    </div>
+                    <div class="bg-yellow-50 p-3 rounded-lg border-l-4 border-yellow-400">
+                        <h3 class="font-medium text-yellow-800">价格不透明</h3>
+                        <p class="text-sm text-yellow-600">购物车总价变化不够直观明确</p>
+                    </div>
+                    <div class="bg-blue-50 p-3 rounded-lg border-l-4 border-blue-400">
+                        <h3 class="font-medium text-blue-800">操作繁琐</h3>
+                        <p class="text-sm text-blue-600">点单流程复杂，修改订单麻烦</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 解决方案亮点 -->
+            <div class="mb-6">
+                <h2 class="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+                    <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
+                    方案A设计亮点
+                </h2>
+                <div class="grid gap-3">
+                    <div class="bg-green-50 p-3 rounded-lg">
+                        <h3 class="font-medium text-green-800 flex items-center">
+                            <i class="fas fa-list-ul text-green-600 mr-2"></i>
+                            经典列表布局
+                        </h3>
+                        <p class="text-sm text-green-600 mt-1">信息密度高，一屏展示更多菜品，提升选择效率</p>
+                    </div>
+                    <div class="bg-orange-50 p-3 rounded-lg">
+                        <h3 class="font-medium text-orange-800 flex items-center">
+                            <i class="fas fa-shopping-cart text-orange-600 mr-2"></i>
+                            悬浮购物车
+                        </h3>
+                        <p class="text-sm text-orange-600 mt-1">实时显示数量和总价，随时掌控消费情况</p>
+                    </div>
+                    <div class="bg-purple-50 p-3 rounded-lg">
+                        <h3 class="font-medium text-purple-800 flex items-center">
+                            <i class="fas fa-plus-minus text-purple-600 mr-2"></i>
+                            直观操作
+                        </h3>
+                        <p class="text-sm text-purple-600 mt-1">一键加减，操作简单直观，减少认知负担</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 用户流程图 -->
+            <div class="mb-6">
+                <h2 class="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+                    <i class="fas fa-route text-blue-500 mr-2"></i>
+                    用户操作流程
+                </h2>
+                <div class="mermaid bg-gray-50 p-4 rounded-lg">
+                    graph TD
+                        A[进入点单页面] --> B[浏览分类菜品]
+                        B --> C{找到心仪菜品?}
+                        C -->|是| D[查看菜品详情]
+                        C -->|否| E[切换分类或搜索]
+                        E --> B
+                        D --> F[加入购物车]
+                        F --> G[查看购物车总价]
+                        G --> H{继续点餐?}
+                        H -->|是| B
+                        H -->|否| I[确认下单]
+                        I --> J[进入结算页面]
+                </div>
+            </div>
+        </div>
+        
+        <!-- 移动端原型展示区域 -->
+        <div class="relative">
+            <!-- 状态栏模拟 -->
+            <div class="bg-black text-white text-xs flex justify-between items-center px-4 py-1">
+                <span>9:41</span>
+                <div class="flex items-center space-x-1">
+                    <i class="fas fa-signal text-xs"></i>
+                    <i class="fas fa-wifi text-xs"></i>
+                    <i class="fas fa-battery-three-quarters text-xs"></i>
+                </div>
+            </div>
+            
+            <!-- 悬浮购物车 -->
+            <div class="cart-float p-3 rounded-full cursor-pointer" onclick="toggleCart()">
+                <i class="fas fa-shopping-cart text-white text-lg"></i>
+                <span class="quantity-badge" id="cartBadge">0</span>
+            </div>
+            
+            <!-- 顶部搜索栏 -->
+            <div class="bg-white p-4 shadow-sm">
+                <div class="relative">
+                    <input type="text" 
+                           placeholder="搜索菜品..." 
+                           class="w-full bg-gray-100 rounded-full py-3 pl-12 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
+                           id="searchInput">
+                    <i class="fas fa-search absolute left-4 top-3.5 text-gray-400"></i>
+                </div>
+            </div>
+            
+            <!-- 分类导航 -->
+            <div class="bg-white px-4 py-3 shadow-sm">
+                <div class="flex space-x-3 overflow-x-auto">
+                    <button class="category-btn category-active px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all" 
+                            data-category="hot">
+                        <i class="fas fa-fire mr-1"></i>热门
+                    </button>
+                    <button class="category-btn bg-gray-100 text-gray-600 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all" 
+                            data-category="main">
+                        <i class="fas fa-drumstick-bite mr-1"></i>主菜
+                    </button>
+                    <button class="category-btn bg-gray-100 text-gray-600 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all" 
+                            data-category="soup">
+                        <i class="fas fa-bowl-hot mr-1"></i>汤品
+                    </button>
+                    <button class="category-btn bg-gray-100 text-gray-600 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all" 
+                            data-category="drink">
+                        <i class="fas fa-glass-water mr-1"></i>饮品
+                    </button>
+                    <button class="category-btn bg-gray-100 text-gray-600 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all" 
+                            data-category="dessert">
+                        <i class="fas fa-ice-cream mr-1"></i>甜品
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 菜品列表 -->
+            <div class="pb-24" id="menuList">
+                <!-- 热门推荐 -->
+                <div class="bg-gradient-to-r from-orange-400 to-red-400 text-white p-4 m-4 rounded-xl">
+                    <h3 class="font-bold text-lg mb-2 flex items-center">
+                        <i class="fas fa-crown mr-2"></i>今日推荐
+                    </h3>
+                    <p class="text-sm opacity-90">精选美味，错过可惜</p>
+                </div>
+                
+                <!-- 菜品项目 -->
+                <div class="px-4 space-y-3">
+                    <!-- 宫保鸡丁 -->
+                    <div class="menu-item bg-white rounded-xl p-4 shadow-sm transition-all cursor-pointer">
+                        <div class="flex">
+                            <img src="https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=100&h=100&fit=crop" 
+                                 alt="宫保鸡丁" 
+                                 class="menu-image w-20 h-20 rounded-lg object-cover mr-4">
+                            <div class="flex-1">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h4 class="font-semibold text-gray-800">宫保鸡丁</h4>
+                                    <span class="bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full">热销</span>
+                                </div>
+                                <p class="text-sm text-gray-500 mb-2">经典川菜，鸡肉嫩滑，花生香脆</p>
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        <span class="text-orange-500 font-bold text-lg">¥28</span>
+                                        <span class="text-gray-400 text-sm ml-2 line-through">¥32</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <button class="quantity-btn bg-gray-200 text-gray-600 hover:bg-orange-500 hover:text-white" 
+                                                onclick="decreaseQuantity('dish1')">-</button>
+                                        <span class="w-8 text-center font-medium" id="quantity-dish1">0</span>
+                                        <button class="quantity-btn bg-orange-500 text-white hover:bg-orange-600" 
+                                                onclick="increaseQuantity('dish1', '宫保鸡丁', 28)">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 麻婆豆腐 -->
+                    <div class="menu-item bg-white rounded-xl p-4 shadow-sm transition-all cursor-pointer">
+                        <div class="flex">
+                            <img src="https://images.unsplash.com/photo-1526318896980-cf78c088247c?w=100&h=100&fit=crop" 
+                                 alt="麻婆豆腐" 
+                                 class="menu-image w-20 h-20 rounded-lg object-cover mr-4">
+                            <div class="flex-1">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h4 class="font-semibold text-gray-800">麻婆豆腐</h4>
+                                    <span class="bg-green-100 text-green-600 text-xs px-2 py-1 rounded-full">推荐</span>
+                                </div>
+                                <p class="text-sm text-gray-500 mb-2">麻辣鲜香，豆腐嫩滑，下饭神器</p>
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        <span class="text-orange-500 font-bold text-lg">¥22</span>
+                                        <div class="flex items-center ml-2">
+                                            <i class="fas fa-star text-yellow-400 text-xs"></i>
+                                            <span class="text-gray-400 text-xs ml-1">4.8</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <button class="quantity-btn bg-gray-200 text-gray-600 hover:bg-orange-500 hover:text-white" 
+                                                onclick="decreaseQuantity('dish2')">-</button>
+                                        <span class="w-8 text-center font-medium" id="quantity-dish2">0</span>
+                                        <button class="quantity-btn bg-orange-500 text-white hover:bg-orange-600" 
+                                                onclick="increaseQuantity('dish2', '麻婆豆腐', 22)">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 红烧肉 -->
+                    <div class="menu-item bg-white rounded-xl p-4 shadow-sm transition-all cursor-pointer">
+                        <div class="flex">
+                            <img src="https://images.unsplash.com/photo-1574484284002-952d92456975?w=100&h=100&fit=crop" 
+                                 alt="红烧肉" 
+                                 class="menu-image w-20 h-20 rounded-lg object-cover mr-4">
+                            <div class="flex-1">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h4 class="font-semibold text-gray-800">红烧肉</h4>
+                                    <span class="bg-orange-100 text-orange-600 text-xs px-2 py-1 rounded-full">招牌</span>
+                                </div>
+                                <p class="text-sm text-gray-500 mb-2">肥瘦相间，软糯香甜，传统味道</p>
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        <span class="text-orange-500 font-bold text-lg">¥38</span>
+                                        <div class="flex items-center ml-2">
+                                            <i class="fas fa-star text-yellow-400 text-xs"></i>
+                                            <span class="text-gray-400 text-xs ml-1">4.9</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <button class="quantity-btn bg-gray-200 text-gray-600 hover:bg-orange-500 hover:text-white" 
+                                                onclick="decreaseQuantity('dish3')">-</button>
+                                        <span class="w-8 text-center font-medium" id="quantity-dish3">0</span>
+                                        <button class="quantity-btn bg-orange-500 text-white hover:bg-orange-600" 
+                                                onclick="increaseQuantity('dish3', '红烧肉', 38)">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 蒸蛋羹 -->
+                    <div class="menu-item bg-white rounded-xl p-4 shadow-sm transition-all cursor-pointer">
+                        <div class="flex">
+                            <img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=100&h=100&fit=crop" 
+                                 alt="蒸蛋羹" 
+                                 class="menu-image w-20 h-20 rounded-lg object-cover mr-4">
+                            <div class="flex-1">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h4 class="font-semibold text-gray-800">蒸蛋羹</h4>
+                                    <span class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full">清淡</span>
+                                </div>
+                                <p class="text-sm text-gray-500 mb-2">嫩滑如豆花，营养易消化</p>
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        <span class="text-orange-500 font-bold text-lg">¥18</span>
+                                        <div class="flex items-center ml-2">
+                                            <i class="fas fa-heart text-red-400 text-xs"></i>
+                                            <span class="text-gray-400 text-xs ml-1">健康</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <button class="quantity-btn bg-gray-200 text-gray-600 hover:bg-orange-500 hover:text-white" 
+                                                onclick="decreaseQuantity('dish4')">-</button>
+                                        <span class="w-8 text-center font-medium" id="quantity-dish4">0</span>
+                                        <button class="quantity-btn bg-orange-500 text-white hover:bg-orange-600" 
+                                                onclick="increaseQuantity('dish4', '蒸蛋羹', 18)">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 柠檬蜂蜜茶 -->
+                    <div class="menu-item bg-white rounded-xl p-4 shadow-sm transition-all cursor-pointer">
+                        <div class="flex">
+                            <img src="https://images.unsplash.com/photo-1544145945-f90425340c7e?w=100&h=100&fit=crop" 
+                                 alt="柠檬蜂蜜茶" 
+                                 class="menu-image w-20 h-20 rounded-lg object-cover mr-4">
+                            <div class="flex-1">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h4 class="font-semibold text-gray-800">柠檬蜂蜜茶</h4>
+                                    <span class="bg-yellow-100 text-yellow-600 text-xs px-2 py-1 rounded-full">饮品</span>
+                                </div>
+                                <p class="text-sm text-gray-500 mb-2">酸甜清香，生津止渴，美容养颜</p>
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        <span class="text-orange-500 font-bold text-lg">¥15</span>
+                                        <div class="flex items-center ml-2">
+                                            <i class="fas fa-snowflake text-blue-400 text-xs"></i>
+                                            <span class="text-gray-400 text-xs ml-1">冰饮</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <button class="quantity-btn bg-gray-200 text-gray-600 hover:bg-orange-500 hover:text-white" 
+                                                onclick="decreaseQuantity('dish5')">-</button>
+                                        <span class="w-8 text-center font-medium" id="quantity-dish5">0</span>
+                                        <button class="quantity-btn bg-orange-500 text-white hover:bg-orange-600" 
+                                                onclick="increaseQuantity('dish5', '柠檬蜂蜜茶', 15)">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 底部结算栏 -->
+            <div class="checkout-bar">
+                <div class="flex items-center justify-between p-4 text-white">
+                    <div class="flex items-center">
+                        <i class="fas fa-shopping-bag mr-2"></i>
+                        <div>
+                            <span class="text-sm">已选 </span>
+                            <span id="totalItems" class="font-bold">0</span>
+                            <span class="text-sm"> 件</span>
+                        </div>
+                        <div class="ml-4">
+                            <span class="text-sm">合计：</span>
+                            <span id="totalPrice" class="font-bold text-xl">¥0</span>
+                        </div>
+                    </div>
+                    <button class="bg-white text-orange-500 px-6 py-2 rounded-full font-bold hover:bg-gray-100 transition-colors" 
+                            onclick="checkout()" 
+                            id="checkoutBtn" 
+                            disabled>
+                        去结算
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 初始化Mermaid
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+        
+        // 购物车数据
+        let cart = {};
+        let totalItems = 0;
+        let totalPrice = 0;
+        
+        // 增加商品数量
+        function increaseQuantity(dishId, dishName, price) {
+            if (!cart[dishId]) {
+                cart[dishId] = { name: dishName, price: price, quantity: 0 };
+            }
+            cart[dishId].quantity++;
+            updateQuantityDisplay(dishId);
+            updateCartSummary();
+            
+            // 添加动画效果
+            const quantityEl = document.getElementById(`quantity-${dishId}`);
+            quantityEl.classList.add('bounce-in');
+            setTimeout(() => quantityEl.classList.remove('bounce-in'), 300);
+        }
+        
+        // 减少商品数量
+        function decreaseQuantity(dishId) {
+            if (cart[dishId] && cart[dishId].quantity > 0) {
+                cart[dishId].quantity--;
+                if (cart[dishId].quantity === 0) {
+                    delete cart[dishId];
+                }
+                updateQuantityDisplay(dishId);
+                updateCartSummary();
+            }
+        }
+        
+        // 更新数量显示
+        function updateQuantityDisplay(dishId) {
+            const quantity = cart[dishId] ? cart[dishId].quantity : 0;
+            document.getElementById(`quantity-${dishId}`).textContent = quantity;
+        }
+        
+        // 更新购物车摘要
+        function updateCartSummary() {
+            totalItems = 0;
+            totalPrice = 0;
+            
+            for (let dishId in cart) {
+                totalItems += cart[dishId].quantity;
+                totalPrice += cart[dishId].price * cart[dishId].quantity;
+            }
+            
+            document.getElementById('cartBadge').textContent = totalItems;
+            document.getElementById('totalItems').textContent = totalItems;
+            document.getElementById('totalPrice').textContent = `¥${totalPrice}`;
+            
+            // 更新结算按钮状态
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            if (totalItems > 0) {
+                checkoutBtn.disabled = false;
+                checkoutBtn.classList.remove('opacity-50');
+                document.querySelector('.cart-float').classList.add('bounce-in');
+                setTimeout(() => document.querySelector('.cart-float').classList.remove('bounce-in'), 300);
+            } else {
+                checkoutBtn.disabled = true;
+                checkoutBtn.classList.add('opacity-50');
+            }
+        }
+        
+        // 分类切换
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // 移除所有活跃状态
+                document.querySelectorAll('.category-btn').forEach(b => {
+                    b.classList.remove('category-active');
+                    b.classList.add('bg-gray-100', 'text-gray-600');
+                });
+                
+                // 添加当前活跃状态
+                this.classList.add('category-active');
+                this.classList.remove('bg-gray-100', 'text-gray-600');
+                
+                // 这里可以添加分类筛选逻辑
+                const category = this.dataset.category;
+                console.log('切换到分类:', category);
+            });
+        });
+        
+        // 搜索功能
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            // 这里可以添加搜索逻辑
+            console.log('搜索:', searchTerm);
+        });
+        
+        // 购物车切换
+        function toggleCart() {
+            if (totalItems > 0) {
+                alert(`购物车中有 ${totalItems} 件商品，总价 ¥${totalPrice}`);
+                // 这里可以显示购物车详情弹窗
+            } else {
+                alert('购物车是空的，快去选择美味的菜品吧！');
+            }
+        }
+        
+        // 结算功能
+        function checkout() {
+            if (totalItems > 0) {
+                alert(`确认下单：共 ${totalItems} 件商品，总价 ¥${totalPrice}`);
+                // 这里跳转到结算页面
+            }
+        }
+        
+        // 图片懒加载
+        document.querySelectorAll('.menu-image').forEach(img => {
+            img.addEventListener('load', function() {
+                this.classList.add('loaded');
+            });
+        });
+        
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartSummary();
+        });
+    </script>
+</body>
+</html> 

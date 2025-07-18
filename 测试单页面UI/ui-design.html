@@ -3,164 +3,288 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UI Design Variations</title>
+    <title>出行助手 - 专业UI设计方案</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        .mockup-border { width: 375px; height: 812px; background: #000; border-radius: 30px; padding: 6px; box-shadow: 0 10px 40px rgba(0,0,0,0.25); }
+        .mockup-border { width: 375px; height: 800px; background: #000; border-radius: 30px; padding: 6px; box-shadow: 0 10px 40px rgba(0,0,0,0.25); }
         .mockup-screen { width: 100%; height: 100%; background: #f6f6f6; border-radius: 24px; overflow: hidden; position: relative; display: flex; flex-direction: column; }
         .content-area::-webkit-scrollbar { display: none; }
         .content-area { scrollbar-width: none; -ms-overflow-style: none; }
+        .car-card { transition: all 0.3s ease; }
+        .car-card:hover { transform: scale(1.02); }
+        .map-gradient { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .status-bar { background: #ffffff; }
     </style>
 </head>
 <body class="bg-gray-200 flex items-center justify-center min-h-screen p-8 lg:p-16">
     <div class="flex flex-col lg:flex-row gap-12 lg:gap-16">
-        <!-- 设计方案 A -->
+        <!-- 设计方案 A: 效率优先假设 -->
         <div class="flex flex-col items-center">
-            <h2 class="text-xl font-bold text-gray-800 mb-4">方案 A: 经典实用风</h2>
+            <h2 class="text-xl font-bold text-gray-800 mb-4">方案 A: 效率优先方案</h2>
             <div class="mockup-border">
                 <div class="mockup-screen">
-                    <!-- Header -->
-                    <div class="flex items-center justify-between px-4 py-3 bg-white shadow-sm">
-                        <button class="text-gray-500"><i class="fas fa-arrow-left"></i></button>
-                        <span class="font-semibold text-lg">购物车</span>
-                        <button class="text-blue-600 font-medium">编辑</button>
+                    <!-- 状态栏 -->
+                    <div class="status-bar h-6 flex items-center justify-between px-6 text-black text-xs">
+                        <span>9:41</span>
+                        <div class="flex items-center gap-1">
+                            <i class="fas fa-signal text-xs"></i>
+                            <i class="fas fa-wifi text-xs"></i>
+                            <span>100%</span>
+                            <i class="fas fa-battery-full text-xs"></i>
+                        </div>
                     </div>
-                    <!-- Content -->
-                    <div class="flex-1 overflow-y-auto content-area px-2 py-2 space-y-4">
-                        <!-- 店铺分组示例 -->
-                        <div class="bg-white rounded-lg shadow p-3">
-                            <div class="flex items-center mb-2">
-                                <input type="checkbox" class="mr-2">
-                                <span class="font-medium">优选自营店</span>
+
+                    <!-- 顶部导航 -->
+                    <div class="bg-white px-4 py-3 flex items-center justify-between shadow-sm">
+                        <i class="fas fa-bars text-gray-600 text-lg"></i>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-map-marker-alt text-blue-500"></i>
+                            <span class="font-medium text-gray-800">北京</span>
+                            <i class="fas fa-chevron-down text-gray-400 text-sm"></i>
+                        </div>
+                        <i class="fas fa-bell text-gray-600 text-lg"></i>
+                    </div>
+
+                    <!-- 地图区域 -->
+                    <div class="flex-1 relative map-gradient">
+                        <!-- 模拟地图内容 -->
+                        <div class="absolute inset-0 opacity-20">
+                            <div class="w-full h-full bg-cover" style="background-image: url('https://picsum.photos/375/400?random=1')"></div>
+                        </div>
+                        
+                        <!-- 当前位置标记 -->
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                            <div class="w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+                            <div class="w-8 h-8 bg-blue-500 opacity-30 rounded-full absolute -top-2 -left-2 animate-ping"></div>
+                        </div>
+
+                        <!-- 附近车辆 -->
+                        <div class="absolute top-20 left-16">
+                            <i class="fas fa-car text-green-500 text-lg"></i>
+                        </div>
+                        <div class="absolute top-32 right-20">
+                            <i class="fas fa-car text-green-500 text-lg"></i>
+                        </div>
+                        <div class="absolute bottom-32 left-8">
+                            <i class="fas fa-car text-green-500 text-lg"></i>
+                        </div>
+
+                        <!-- 起终点输入浮层 -->
+                        <div class="absolute top-4 left-4 right-4 bg-white rounded-xl shadow-lg p-4">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                                <span class="flex-1 text-gray-800 font-medium">中关村软件园</span>
+                                <i class="fas fa-heart text-gray-300"></i>
                             </div>
-                            <!-- 商品项 -->
-                            <div class="space-y-3">
-                                <div class="flex items-center border-b pb-3">
-                                    <input type="checkbox" class="mr-2">
-                                    <img src="https://placehold.co/64x64?text=IMG&radius=32" class="w-14 h-14 rounded object-cover mr-3">
-                                    <div class="flex-1">
-                                        <div class="font-medium text-gray-800">无线蓝牙耳机</div>
-                                        <div class="text-xs text-gray-400">黑色 / 标准版</div>
-                                        <div class="flex items-center mt-1">
-                                            <span class="text-red-500 font-bold mr-2">¥299</span>
-                                            <div class="flex items-center ml-auto">
-                                                <button class="w-6 h-6 flex items-center justify-center border rounded text-gray-500">-</button>
-                                                <span class="mx-2">1</span>
-                                                <button class="w-6 h-6 flex items-center justify-center border rounded text-gray-500">+</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button class="ml-2 text-gray-300 hover:text-red-400 hidden"><i class="fas fa-trash"></i></button>
-                                </div>
-                                <!-- 售罄商品示例 -->
-                                <div class="flex items-center opacity-60 relative">
-                                    <input type="checkbox" class="mr-2" disabled>
-                                    <img src="https://placehold.co/64x64?text=IMG&radius=32" class="w-14 h-14 rounded object-cover mr-3">
-                                    <div class="flex-1">
-                                        <div class="font-medium text-gray-800">限量运动手表</div>
-                                        <div class="text-xs text-gray-400">红色 / 限量版</div>
-                                        <div class="flex items-center mt-1">
-                                            <span class="text-gray-400 font-bold mr-2">¥499</span>
-                                            <div class="flex items-center ml-auto">
-                                                <button class="w-6 h-6 flex items-center justify-center border rounded text-gray-300" disabled>-</button>
-                                                <span class="mx-2">1</span>
-                                                <button class="w-6 h-6 flex items-center justify-center border rounded text-gray-300" disabled>+</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <span class="absolute right-2 top-2 bg-gray-300 text-xs text-white px-2 py-0.5 rounded">已售罄</span>
-                                </div>
+                            <div class="h-px bg-gray-200 mx-6"></div>
+                            <div class="flex items-center gap-3 mt-3">
+                                <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                <span class="flex-1 text-gray-400 text-lg">您要去哪里？</span>
+                                <i class="fas fa-search text-gray-400"></i>
                             </div>
                         </div>
-                        <!-- 空状态示例（可隐藏） -->
-                        <!-- <div class="flex flex-col items-center justify-center h-96 text-gray-400">
-                            <img src="https://cdn.jsdelivr.net/gh/oneai-design/cdn/empty-cart.svg" class="w-32 mb-4">
-                            <div class="mb-2">购物车空空如也</div>
-                            <button class="bg-blue-500 text-white px-4 py-2 rounded">去逛逛</button>
-                        </div> -->
+
+                        <!-- 快捷地址按钮 -->
+                        <div class="absolute bottom-4 left-4 flex gap-2">
+                            <div class="bg-white px-3 py-2 rounded-full shadow-md">
+                                <span class="text-sm text-gray-700">🏠 回家</span>
+                            </div>
+                            <div class="bg-white px-3 py-2 rounded-full shadow-md">
+                                <span class="text-sm text-gray-700">🏢 公司</span>
+                            </div>
+                        </div>
                     </div>
-                    <!-- Footer -->
-                    <div class="bg-white px-4 py-3 shadow flex items-center">
-                        <input type="checkbox" class="mr-2">
-                        <span class="text-gray-700">全选</span>
-                        <span class="ml-auto text-gray-700">合计: <span class="text-red-500 font-bold">¥299</span></span>
-                        <button class="ml-4 bg-blue-500 text-white px-6 py-2 rounded-full font-semibold">结算(1)</button>
+
+                    <!-- 车型选择区 -->
+                    <div class="bg-white px-4 py-3">
+                        <div class="flex gap-3 overflow-x-auto">
+                            <!-- 快车 -->
+                            <div class="car-card min-w-20 bg-blue-50 border-2 border-blue-500 rounded-lg p-3 text-center">
+                                <i class="fas fa-car text-blue-500 text-xl mb-1"></i>
+                                <div class="text-xs font-medium text-blue-600">快车</div>
+                                <div class="text-xs text-gray-500">约5分钟</div>
+                            </div>
+                            <!-- 专车 -->
+                            <div class="car-card min-w-20 bg-gray-50 border border-gray-200 rounded-lg p-3 text-center">
+                                <i class="fas fa-car-side text-gray-600 text-xl mb-1"></i>
+                                <div class="text-xs font-medium text-gray-700">专车</div>
+                                <div class="text-xs text-gray-500">约3分钟</div>
+                            </div>
+                            <!-- 豪华车 -->
+                            <div class="car-card min-w-20 bg-gray-50 border border-gray-200 rounded-lg p-3 text-center">
+                                <i class="fas fa-gem text-gray-600 text-xl mb-1"></i>
+                                <div class="text-xs font-medium text-gray-700">豪华车</div>
+                                <div class="text-xs text-gray-500">约6分钟</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 价格预估 -->
+                    <div class="bg-white px-4 py-2 border-t border-gray-100">
+                        <div class="text-center text-gray-600 text-sm">
+                            预估 <span class="font-semibold text-lg text-gray-800">¥18-22</span> · 约5分钟到达
+                        </div>
+                    </div>
+
+                    <!-- 叫车按钮 -->
+                    <div class="bg-white px-4 pb-6 pt-2">
+                        <button class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-4 rounded-xl text-lg transition-colors">
+                            <i class="fas fa-car mr-2"></i>立即叫车
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- 设计方案 B -->
+
+        <!-- 设计方案 B: 探索优先假设 -->
         <div class="flex flex-col items-center">
-            <h2 class="text-xl font-bold text-gray-800 mb-4">方案 B: 现代卡片风</h2>
+            <h2 class="text-xl font-bold text-gray-800 mb-4">方案 B: 探索优先方案</h2>
             <div class="mockup-border">
                 <div class="mockup-screen">
-                    <!-- Header -->
-                    <div class="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-blue-100 to-purple-100 shadow-sm">
-                        <button class="text-gray-500"><i class="fas fa-arrow-left"></i></button>
-                        <span class="font-bold text-lg tracking-wide">购物车</span>
-                        <button class="text-purple-600 font-medium">编辑</button>
+                    <!-- 状态栏 -->
+                    <div class="status-bar h-6 flex items-center justify-between px-6 text-black text-xs">
+                        <span>9:41</span>
+                        <div class="flex items-center gap-1">
+                            <i class="fas fa-signal text-xs"></i>
+                            <i class="fas fa-wifi text-xs"></i>
+                            <span>100%</span>
+                            <i class="fas fa-battery-full text-xs"></i>
+                        </div>
                     </div>
-                    <!-- Content -->
-                    <div class="flex-1 overflow-y-auto content-area px-3 py-4 space-y-6">
-                        <!-- 店铺卡片分组 -->
-                        <div class="rounded-2xl bg-white/80 shadow-lg p-4">
-                            <div class="flex items-center mb-3">
-                                <input type="checkbox" class="mr-2 accent-purple-500">
-                                <span class="font-semibold text-purple-700 text-base">潮流旗舰店</span>
+
+                    <!-- 顶部导航 -->
+                    <div class="bg-white px-4 py-3 flex items-center justify-between shadow-sm">
+                        <i class="fas fa-bars text-gray-600 text-lg"></i>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-map-marker-alt text-blue-500"></i>
+                            <span class="font-medium text-gray-800">北京</span>
+                            <i class="fas fa-chevron-down text-gray-400 text-sm"></i>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="bg-red-500 text-white px-2 py-1 rounded-full text-xs">优惠</div>
+                            <i class="fas fa-bell text-gray-600 text-lg"></i>
+                        </div>
+                    </div>
+
+                    <!-- 地图区域 -->
+                    <div class="flex-1 relative map-gradient">
+                        <!-- 模拟地图内容 -->
+                        <div class="absolute inset-0 opacity-20">
+                            <div class="w-full h-full bg-cover" style="background-image: url('https://picsum.photos/375/400?random=2')"></div>
+                        </div>
+                        
+                        <!-- 当前位置标记 -->
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                            <div class="w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+                            <div class="w-8 h-8 bg-blue-500 opacity-30 rounded-full absolute -top-2 -left-2 animate-ping"></div>
+                        </div>
+
+                        <!-- 附近车辆（更多显示） -->
+                        <div class="absolute top-16 left-12">
+                            <div class="bg-white rounded-full p-1 shadow-md">
+                                <i class="fas fa-car text-green-500 text-sm"></i>
                             </div>
-                            <!-- 商品卡片 -->
-                            <div class="space-y-4">
-                                <div class="flex items-center bg-white rounded-xl shadow p-2">
-                                    <input type="checkbox" class="mr-2 accent-purple-500">
-                                    <img src="https://placehold.co/64x64?text=IMG&radius=32" class="w-14 h-14 rounded-lg object-cover mr-3">
-                                    <div class="flex-1">
-                                        <div class="font-semibold text-gray-900">真无线蓝牙耳机</div>
-                                        <div class="text-xs text-gray-400">白色 / 降噪版</div>
-                                        <div class="flex items-center mt-1">
-                                            <span class="text-purple-600 font-bold mr-2">¥399</span>
-                                            <div class="flex items-center ml-auto">
-                                                <button class="w-7 h-7 flex items-center justify-center border rounded-lg text-gray-500">-</button>
-                                                <span class="mx-2">2</span>
-                                                <button class="w-7 h-7 flex items-center justify-center border rounded-lg text-gray-500">+</button>
-                                            </div>
-                                        </div>
+                        </div>
+                        <div class="absolute top-28 right-16">
+                            <div class="bg-white rounded-full p-1 shadow-md">
+                                <i class="fas fa-car text-green-500 text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="absolute bottom-28 left-6">
+                            <div class="bg-white rounded-full p-1 shadow-md">
+                                <i class="fas fa-car text-blue-500 text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="absolute top-20 right-8">
+                            <div class="bg-white rounded-full p-1 shadow-md">
+                                <i class="fas fa-car text-purple-500 text-sm"></i>
+                            </div>
+                        </div>
+
+                        <!-- 起终点输入浮层 -->
+                        <div class="absolute top-4 left-4 right-4 bg-white rounded-xl shadow-lg p-4">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                                <span class="flex-1 text-gray-800 font-medium">中关村软件园</span>
+                                <i class="fas fa-heart text-red-400"></i>
+                            </div>
+                            <div class="h-px bg-gray-200 mx-6"></div>
+                            <div class="flex items-center gap-3 mt-3">
+                                <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                <span class="flex-1 text-gray-400">您要去哪里？</span>
+                                <i class="fas fa-microphone text-blue-500"></i>
+                                <i class="fas fa-search text-gray-400"></i>
+                            </div>
+                        </div>
+
+                        <!-- 推荐目的地 -->
+                        <div class="absolute bottom-4 left-4 right-4">
+                            <div class="bg-white rounded-lg p-3 shadow-md mb-2">
+                                <div class="text-xs text-gray-500 mb-2">推荐目的地</div>
+                                <div class="flex gap-2">
+                                    <div class="bg-blue-50 px-3 py-1 rounded-full">
+                                        <span class="text-sm text-blue-600">🏠 回家</span>
                                     </div>
-                                    <button class="ml-2 text-gray-300 hover:text-red-400 hidden"><i class="fas fa-trash"></i></button>
-                                </div>
-                                <!-- 下架商品卡片 -->
-                                <div class="flex items-center bg-gray-100 rounded-xl p-2 opacity-60 relative">
-                                    <input type="checkbox" class="mr-2" disabled>
-                                    <img src="https://placehold.co/64x64?text=IMG&radius=32" class="w-14 h-14 rounded-lg object-cover mr-3">
-                                    <div class="flex-1">
-                                        <div class="font-semibold text-gray-900">智能运动手表</div>
-                                        <div class="text-xs text-gray-400">蓝色 / 标准版</div>
-                                        <div class="flex items-center mt-1">
-                                            <span class="text-gray-400 font-bold mr-2">¥599</span>
-                                            <div class="flex items-center ml-auto">
-                                                <button class="w-7 h-7 flex items-center justify-center border rounded-lg text-gray-300" disabled>-</button>
-                                                <span class="mx-2">1</span>
-                                                <button class="w-7 h-7 flex items-center justify-center border rounded-lg text-gray-300" disabled>+</button>
-                                            </div>
-                                        </div>
+                                    <div class="bg-orange-50 px-3 py-1 rounded-full">
+                                        <span class="text-sm text-orange-600">🏢 公司</span>
                                     </div>
-                                    <span class="absolute right-2 top-2 bg-purple-300 text-xs text-white px-2 py-0.5 rounded">已下架</span>
+                                    <div class="bg-green-50 px-3 py-1 rounded-full">
+                                        <span class="text-sm text-green-600">🛍️ 商场</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- 空状态示例（可隐藏） -->
-                        <!-- <div class="flex flex-col items-center justify-center h-96 text-gray-400">
-                            <img src="https://cdn.jsdelivr.net/gh/oneai-design/cdn/empty-cart.svg" class="w-32 mb-4">
-                            <div class="mb-2">购物车空空如也</div>
-                            <button class="bg-purple-500 text-white px-4 py-2 rounded">去逛逛</button>
-                        </div> -->
                     </div>
-                    <!-- Footer -->
-                    <div class="bg-white/90 px-5 py-4 shadow flex items-center rounded-b-2xl">
-                        <input type="checkbox" class="mr-2 accent-purple-500">
-                        <span class="text-gray-700">全选</span>
-                        <span class="ml-auto text-gray-700">合计: <span class="text-purple-600 font-bold">¥798</span></span>
-                        <button class="ml-4 bg-gradient-to-r from-purple-500 to-blue-400 text-white px-7 py-2 rounded-full font-semibold shadow">结算(2)</button>
+
+                    <!-- 车型选择区（详细版） -->
+                    <div class="bg-white px-4 py-3">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-sm font-medium text-gray-700">选择出行方式</span>
+                            <span class="text-xs text-blue-500">优惠券 ></span>
+                        </div>
+                        <div class="space-y-2">
+                            <!-- 快车 -->
+                            <div class="car-card border-2 border-blue-500 bg-blue-50 rounded-lg p-3 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <i class="fas fa-car text-blue-500 text-xl"></i>
+                                    <div>
+                                        <div class="font-medium text-gray-800">快车</div>
+                                        <div class="text-xs text-gray-500">约5分钟 · 4.2公里</div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-semibold text-gray-800">¥18-22</div>
+                                    <div class="text-xs text-red-500">立减5元</div>
+                                </div>
+                            </div>
+                            <!-- 专车 -->
+                            <div class="car-card border border-gray-200 bg-white rounded-lg p-3 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <i class="fas fa-car-side text-gray-600 text-xl"></i>
+                                    <div>
+                                        <div class="font-medium text-gray-800">专车</div>
+                                        <div class="text-xs text-gray-500">约3分钟 · 舒适型</div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-semibold text-gray-800">¥28-35</div>
+                                    <div class="text-xs text-green-500">新人9折</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 叫车按钮区 -->
+                    <div class="bg-white px-4 pb-6 pt-2">
+                        <div class="flex gap-3">
+                            <button class="flex-1 bg-gray-100 text-gray-600 font-medium py-3 rounded-lg">
+                                <i class="fas fa-clock mr-2"></i>预约
+                            </button>
+                            <button class="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg transition-colors">
+                                <i class="fas fa-car mr-2"></i>立即叫车
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

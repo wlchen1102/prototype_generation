@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UI Design Variations - Shopping Cart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .mockup-border { width: 375px; height: 812px; background: #000; border-radius: 30px; padding: 6px; box-shadow: 0 10px 40px rgba(0,0,0,0.25); }
+        .mockup-screen { width: 100%; height: 100%; background: #f6f6f6; border-radius: 24px; overflow: hidden; position: relative; display: flex; flex-direction: column; }
+        .content-area::-webkit-scrollbar { display: none; }
+        .content-area { scrollbar-width: none; -ms-overflow-style: none; }
+    </style>
+</head>
+<body class="bg-gray-200 flex items-center justify-center min-h-screen p-8 lg:p-16">
+    <div class="flex flex-col lg:flex-row gap-12 lg:gap-16">
+        <div class="flex flex-col items-center">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">方案 A: 经典实用风</h2>
+            <div class="mockup-border">
+                <div class="mockup-screen bg-white">
+                    <div class="flex justify-between items-center px-4 pt-1 text-xs text-gray-900">
+                        <span>9:41</span>
+                        <div class="flex items-center gap-1">
+                            <i class="fas fa-signal"></i>
+                            <i class="fas fa-wifi"></i>
+                            <i class="fas fa-battery-full"></i>
+                        </div>
+                    </div>
+                    <header class="flex items-center justify-between p-4 border-b border-gray-200">
+                        <i class="fas fa-arrow-left text-gray-800"></i>
+                        <h1 class="text-lg font-semibold">购物车(3)</h1>
+                        <button class="text-gray-800 text-sm">管理</button>
+                    </header>
+                    <main class="flex-1 overflow-y-auto content-area bg-gray-50 p-3 space-y-3">
+                        <div class="bg-white rounded-lg">
+                            <div class="p-3 border-b border-gray-100 flex items-center gap-2">
+                                <input type="checkbox" class="form-checkbox rounded-full text-blue-600">
+                                <i class="fas fa-store text-gray-600"></i>
+                                <span class="font-medium">品牌旗舰店</span>
+                                <i class="fas fa-chevron-right text-gray-400 text-sm"></i>
+                            </div>
+                            <div class="flex items-center p-3 gap-3">
+                                <input type="checkbox" class="form-checkbox rounded-full text-blue-600" checked>
+                                <img src="https://placehold.co/80x80?text=Product&radius=8" alt="Product Image" class="rounded-md">
+                                <div class="flex-1">
+                                    <p class="font-medium text-sm line-clamp-2">智能降噪耳机 Pro</p>
+                                    <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-md">深空灰; 官方标配</span>
+                                    <div class="flex justify-between items-center mt-1">
+                                        <p class="text-red-600 font-bold">¥999.00</p>
+                                        <div class="flex items-center border border-gray-200 rounded">
+                                            <button class="px-2 py-0.5 text-gray-500">-</button>
+                                            <span class="px-3 py-0.5">1</span>
+                                            <button class="px-2 py-0.5 text-blue-600">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg">
+                            <div class="p-3 border-b border-gray-100 flex items-center gap-2">
+                                <input type="checkbox" class="form-checkbox rounded-full text-blue-600" checked>
+                                <i class="fas fa-store text-gray-600"></i>
+                                <span class="font-medium">运动生活馆</span>
+                                <i class="fas fa-chevron-right text-gray-400 text-sm"></i>
+                            </div>
+                            <div class="flex items-center p-3 gap-3">
+                                <input type="checkbox" class="form-checkbox rounded-full text-blue-600" checked>
+                                <img src="https://placehold.co/80x80?text=Shoe&radius=8" alt="Product Image" class="rounded-md">
+                                <div class="flex-1">
+                                    <p class="font-medium text-sm line-clamp-2">透气网面跑步鞋</p>
+                                    <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-md">黑色; 42码</span>
+                                    <div class="flex justify-between items-center mt-1">
+                                        <p class="text-red-600 font-bold">¥289.00</p>
+                                        <div class="flex items-center border border-gray-200 rounded">
+                                            <button class="px-2 py-0.5 text-gray-500">-</button>
+                                            <span class="px-3 py-0.5">1</span>
+                                            <button class="px-2 py-0.5 text-blue-600">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="flex items-center p-3 gap-3">
+                                <input type="checkbox" class="form-checkbox rounded-full text-blue-600">
+                                <img src="https://placehold.co/80x80?text=Bottle&radius=8" alt="Product Image" class="rounded-md">
+                                <div class="flex-1">
+                                    <p class="font-medium text-sm line-clamp-2">大容量运动水壶</p>
+                                    <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-md">磨砂黑; 1000ml</span>
+                                    <div class="flex justify-between items-center mt-1">
+                                        <p class="text-red-600 font-bold">¥89.00</p>
+                                        <div class="flex items-center border border-gray-200 rounded">
+                                            <button class="px-2 py-0.5 text-gray-500">-</button>
+                                            <span class="px-3 py-0.5">2</span>
+                                            <button class="px-2 py-0.5 text-blue-600">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                    <footer class="flex items-center justify-between p-4 bg-white border-t border-gray-200">
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" class="form-checkbox rounded-full text-blue-600">
+                            <span class="text-sm">全选</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="text-right">
+                                <span class="text-sm">合计:</span>
+                                <span class="font-bold text-red-600">¥1288.00</span>
+                            </div>
+                            <button class="bg-blue-600 text-white font-bold py-3 px-6 rounded-full">结算(2)</button>
+                        </div>
+                    </footer>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col items-center">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">方案 B: 现代卡片风</h2>
+            <div class="mockup-border">
+                <div class="mockup-screen bg-gray-100">
+                    <div class="flex justify-between items-center px-4 pt-1 text-xs text-gray-700">
+                        <span>9:41</span>
+                        <div class="flex items-center gap-1">
+                            <i class="fas fa-signal"></i>
+                            <i class="fas fa-wifi"></i>
+                            <i class="fas fa-battery-full"></i>
+                        </div>
+                    </div>
+                    <header class="flex items-center justify-between p-4">
+                        <button class="bg-white w-8 h-8 rounded-full flex items-center justify-center shadow-sm">
+                            <i class="fas fa-arrow-left text-gray-800"></i>
+                        </button>
+                        <h1 class="text-lg font-semibold">购物车 (3)</h1>
+                        <button class="bg-white w-8 h-8 rounded-full flex items-center justify-center shadow-sm">
+                            <i class="fas fa-edit text-gray-800"></i>
+                        </button>
+                    </header>
+                    <main class="flex-1 overflow-y-auto content-area px-4 space-y-4">
+                        <div class="bg-white rounded-xl shadow-sm p-4 space-y-4">
+                            <div class="flex items-center gap-3">
+                                <input type="checkbox" class="form-checkbox h-5 w-5 rounded-full border-gray-300 text-green-500 focus:ring-green-400">
+                                <i class="fas fa-store text-green-500"></i>
+                                <span class="font-semibold">品牌旗舰店</span>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <input type="checkbox" class="form-checkbox h-5 w-5 rounded-full border-gray-300 text-green-500 focus:ring-green-400" checked>
+                                <img src="https://placehold.co/80x80?text=Product&radius=12" alt="Product Image" class="rounded-xl">
+                                <div class="flex-1">
+                                    <p class="font-semibold text-sm">智能降噪耳机 Pro</p>
+                                    <p class="text-xs text-gray-500 mt-1">深空灰; 官方标配</p>
+                                    <div class="flex justify-between items-center mt-2">
+                                        <p class="text-gray-800 font-bold">¥999</p>
+                                        <div class="flex items-center bg-gray-100 rounded-full">
+                                            <button class="px-3 py-1 text-gray-500">-</button>
+                                            <span class="px-2 py-1 text-sm font-medium">1</span>
+                                            <button class="px-3 py-1 text-green-500">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl shadow-sm p-4 space-y-4">
+                            <div class="flex items-center gap-3">
+                                <input type="checkbox" class="form-checkbox h-5 w-5 rounded-full border-gray-300 text-green-500 focus:ring-green-400" checked>
+                                <i class="fas fa-store text-green-500"></i>
+                                <span class="font-semibold">运动生活馆</span>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <input type="checkbox" class="form-checkbox h-5 w-5 rounded-full border-gray-300 text-green-500 focus:ring-green-400" checked>
+                                <img src="https://placehold.co/80x80?text=Shoe&radius=12" alt="Product Image" class="rounded-xl">
+                                <div class="flex-1">
+                                    <p class="font-semibold text-sm">透气网面跑步鞋</p>
+                                    <p class="text-xs text-gray-500 mt-1">黑色; 42码</p>
+                                    <div class="flex justify-between items-center mt-2">
+                                        <p class="text-gray-800 font-bold">¥289</p>
+                                        <div class="flex items-center bg-gray-100 rounded-full">
+                                            <button class="px-3 py-1 text-gray-500">-</button>
+                                            <span class="px-2 py-1 text-sm font-medium">1</span>
+                                            <button class="px-3 py-1 text-green-500">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="flex items-center gap-4">
+                                <input type="checkbox" class="form-checkbox h-5 w-5 rounded-full border-gray-300 text-green-500 focus:ring-green-400">
+                                <img src="https://placehold.co/80x80?text=Bottle&radius=12" alt="Product Image" class="rounded-xl">
+                                <div class="flex-1">
+                                    <p class="font-semibold text-sm">大容量运动水壶</p>
+                                    <p class="text-xs text-gray-500 mt-1">磨砂黑; 1000ml</p>
+                                    <div class="flex justify-between items-center mt-2">
+                                        <p class="text-gray-800 font-bold">¥89</p>
+                                        <div class="flex items-center bg-gray-100 rounded-full">
+                                            <button class="px-3 py-1 text-gray-500">-</button>
+                                            <span class="px-2 py-1 text-sm font-medium">2</span>
+                                            <button class="px-3 py-1 text-green-500">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                    <footer class="grid grid-cols-3 items-center p-4 bg-white rounded-t-2xl shadow-lg">
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" class="form-checkbox h-5 w-5 rounded-full border-gray-300 text-green-500 focus:ring-green-400">
+                            <span class="text-sm">全选</span>
+                        </div>
+                        <div class="text-center">
+                            <span class="text-sm">合计</span>
+                            <p class="font-bold text-lg">¥1288</p>
+                        </div>
+                        <button class="bg-green-500 text-white font-bold py-3 px-4 rounded-xl shadow-md shadow-green-200 col-span-1">结算(2)</button>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电影详情页 UI Design Variations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .mockup-border { width: 375px; height: 800px; background: #000; border-radius: 30px; padding: 6px; box-shadow: 0 10px 40px rgba(0,0,0,0.25); }
+        .mockup-screen { width: 100%; height: 100%; background: #f6f6f6; border-radius: 24px; overflow: hidden; position: relative; display: flex; flex-direction: column; }
+        .content-area::-webkit-scrollbar { display: none; }
+        .content-area { scrollbar-width: none; -ms-overflow-style: none; }
+        .movie-bg { background-image: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%), url('https://picsum.photos/400/600?random=1'); background-size: cover; background-position: center; }
+    </style>
+</head>
+<body class="bg-gray-200 flex items-center justify-center min-h-screen p-8 lg:p-16">
+    <div class="flex flex-col lg:flex-row gap-12 lg:gap-16">
+        <!-- 设计方案 A -->
+        <div class="flex flex-col items-center">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">方案 A: 经典实用风</h2>
+            <div class="mockup-border">
+                <div class="mockup-screen">
+                    <!-- 状态栏 -->
+                    <div class="flex justify-between items-center px-6 py-2 bg-white text-black text-sm font-medium">
+                        <span>9:41</span>
+                        <div class="flex items-center space-x-1">
+                            <i class="fas fa-signal text-xs"></i>
+                            <i class="fas fa-wifi text-xs"></i>
+                            <i class="fas fa-battery-three-quarters text-xs"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- 内容区域 -->
+                    <div class="content-area flex-1 overflow-y-auto bg-white">
+                        <!-- 顶部导航 -->
+                        <div class="flex justify-between items-center p-4 bg-white border-b border-gray-100">
+                            <i class="fas fa-arrow-left text-gray-600 text-lg"></i>
+                            <div class="flex space-x-4">
+                                <i class="fas fa-share-alt text-gray-600"></i>
+                                <i class="fas fa-heart text-red-500"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- 电影海报和基本信息 -->
+                        <div class="p-4">
+                            <div class="flex space-x-4">
+                                <img src="https://picsum.photos/120/180?random=2" 
+                                     alt="电影海报" class="w-24 h-36 rounded-lg object-cover shadow-lg">
+                                <div class="flex-1">
+                                    <h1 class="text-xl font-bold text-gray-900 mb-2">阿凡达：水之道</h1>
+                                    <p class="text-sm text-gray-600 mb-2">Avatar: The Way of Water</p>
+                                    
+                                    <!-- 评分 -->
+                                    <div class="flex items-center mb-3">
+                                        <div class="flex text-yellow-400 mr-2">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star-half-alt"></i>
+                                        </div>
+                                        <span class="text-sm font-semibold text-gray-700">8.9</span>
+                                    </div>
+                                    
+                                    <!-- 标签 -->
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">科幻</span>
+                                        <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">冒险</span>
+                                        <span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">3D</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 快速信息 -->
+                        <div class="px-4 py-3 bg-gray-50 mx-4 rounded-lg">
+                            <div class="grid grid-cols-3 gap-4 text-center">
+                                <div>
+                                    <p class="text-xs text-gray-500">时长</p>
+                                    <p class="text-sm font-semibold">192分钟</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">上映</p>
+                                    <p class="text-sm font-semibold">2022-12-16</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">制片国</p>
+                                    <p class="text-sm font-semibold">美国</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 预告片 -->
+                        <div class="p-4">
+                            <div class="relative rounded-lg overflow-hidden bg-gray-900">
+                                <img src="https://picsum.photos/320/180?random=3" 
+                                     alt="预告片" class="w-full h-32 object-cover opacity-80">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="w-12 h-12 bg-white bg-opacity-90 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-play text-gray-800 ml-1"></i>
+                                    </div>
+                                </div>
+                                <div class="absolute bottom-2 left-2 text-white text-sm font-medium">预告片</div>
+                            </div>
+                        </div>
+                        
+                        <!-- 剧情简介 -->
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-3">剧情简介</h3>
+                            <p class="text-sm text-gray-700 leading-relaxed">
+                                续集故事承接自第一部的剧情，纳美人杰克·萨利和奈蒂莉现在已经是一对夫妻，并且育有子女。萨利一家在潘多拉星球过着平静的生活，然而威胁再度降临...
+                            </p>
+                            <button class="text-blue-600 text-sm mt-2 font-medium">展开更多</button>
+                        </div>
+                        
+                        <!-- 演员阵容 -->
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-3">演员阵容</h3>
+                            <div class="flex space-x-4 overflow-x-auto pb-2">
+                                <div class="flex-shrink-0 text-center w-16">
+                                    <img src="https://picsum.photos/64/64?random=4" 
+                                         alt="演员" class="w-16 h-16 rounded-full object-cover mb-2">
+                                    <p class="text-xs font-medium text-gray-900">萨姆·沃辛顿</p>
+                                    <p class="text-xs text-gray-500">杰克·萨利</p>
+                                </div>
+                                <div class="flex-shrink-0 text-center w-16">
+                                    <img src="https://picsum.photos/64/64?random=5" 
+                                         alt="演员" class="w-16 h-16 rounded-full object-cover mb-2">
+                                    <p class="text-xs font-medium text-gray-900">佐伊·萨尔达娜</p>
+                                    <p class="text-xs text-gray-500">奈蒂莉</p>
+                                </div>
+                                <div class="flex-shrink-0 text-center w-16">
+                                    <img src="https://picsum.photos/64/64?random=6" 
+                                         alt="演员" class="w-16 h-16 rounded-full object-cover mb-2">
+                                    <p class="text-xs font-medium text-gray-900">凯特·温斯莱特</p>
+                                    <p class="text-xs text-gray-500">罗纳尔</p>
+                                </div>
+                                <div class="flex-shrink-0 text-center w-16">
+                                    <img src="https://picsum.photos/64/64?random=7" 
+                                         alt="演员" class="w-16 h-16 rounded-full object-cover mb-2">
+                                    <p class="text-xs font-medium text-gray-900">杨紫琼</p>
+                                    <p class="text-xs text-gray-500">卡琳娜博士</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 相关推荐 -->
+                        <div class="p-4 pb-20">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-3">相关推荐</h3>
+                            <div class="grid grid-cols-3 gap-3">
+                                <div class="text-center">
+                                    <img src="https://picsum.photos/100/150?random=8" 
+                                         alt="推荐电影" class="w-full h-24 rounded-lg object-cover mb-2">
+                                    <p class="text-xs font-medium text-gray-900">阿凡达</p>
+                                    <p class="text-xs text-gray-500">8.7分</p>
+                                </div>
+                                <div class="text-center">
+                                    <img src="https://picsum.photos/100/150?random=9" 
+                                         alt="推荐电影" class="w-full h-24 rounded-lg object-cover mb-2">
+                                    <p class="text-xs font-medium text-gray-900">银河护卫队</p>
+                                    <p class="text-xs text-gray-500">8.5分</p>
+                                </div>
+                                <div class="text-center">
+                                    <img src="https://picsum.photos/100/150?random=10" 
+                                         alt="推荐电影" class="w-full h-24 rounded-lg object-cover mb-2">
+                                    <p class="text-xs font-medium text-gray-900">星际穿越</p>
+                                    <p class="text-xs text-gray-500">9.2分</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 底部购票栏 -->
+                    <div class="flex items-center justify-between p-4 bg-white border-t border-gray-100">
+                        <div class="flex items-center space-x-6">
+                            <div class="flex items-center space-x-1">
+                                <i class="fas fa-heart text-gray-400"></i>
+                                <span class="text-sm text-gray-600">2.3万</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <i class="fas fa-share-alt text-gray-400"></i>
+                                <span class="text-sm text-gray-600">分享</span>
+                            </div>
+                        </div>
+                        <button class="bg-red-500 text-white px-6 py-2 rounded-full font-medium text-sm">
+                            立即购票
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 设计方案 B -->
+        <div class="flex flex-col items-center">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">方案 B: 沉浸式电影风</h2>
+            <div class="mockup-border">
+                <div class="mockup-screen">
+                    <!-- 状态栏 -->
+                    <div class="flex justify-between items-center px-6 py-2 bg-black bg-opacity-30 text-white text-sm font-medium absolute top-0 left-0 right-0 z-10">
+                        <span>9:41</span>
+                        <div class="flex items-center space-x-1">
+                            <i class="fas fa-signal text-xs"></i>
+                            <i class="fas fa-wifi text-xs"></i>
+                            <i class="fas fa-battery-three-quarters text-xs"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- 内容区域 -->
+                    <div class="content-area flex-1 overflow-y-auto bg-black">
+                        <!-- 英雄区域 -->
+                        <div class="movie-bg h-96 relative flex flex-col justify-end p-6 pt-16">
+                            <!-- 顶部导航 -->
+                            <div class="absolute top-12 left-0 right-0 flex justify-between items-center px-6">
+                                <i class="fas fa-arrow-left text-white text-lg"></i>
+                                <div class="flex space-x-4">
+                                    <i class="fas fa-share-alt text-white"></i>
+                                    <i class="fas fa-heart text-red-500"></i>
+                                </div>
+                            </div>
+                            
+                            <!-- 播放按钮 -->
+                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                <div class="w-16 h-16 bg-white bg-opacity-20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white border-opacity-30">
+                                    <i class="fas fa-play text-white text-xl ml-1"></i>
+                                </div>
+                            </div>
+                            
+                            <!-- 电影信息 -->
+                            <div class="text-white">
+                                <h1 class="text-2xl font-bold mb-2">阿凡达：水之道</h1>
+                                <p class="text-sm text-gray-200 mb-3">Avatar: The Way of Water</p>
+                                
+                                <!-- 评分和标签 -->
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="flex items-center">
+                                        <div class="flex text-yellow-400 mr-2">
+                                            <i class="fas fa-star text-sm"></i>
+                                            <i class="fas fa-star text-sm"></i>
+                                            <i class="fas fa-star text-sm"></i>
+                                            <i class="fas fa-star text-sm"></i>
+                                            <i class="fas fa-star-half-alt text-sm"></i>
+                                        </div>
+                                        <span class="text-lg font-bold">8.9</span>
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <span class="px-2 py-1 bg-white bg-opacity-20 backdrop-blur-sm text-xs rounded-full border border-white border-opacity-30">科幻</span>
+                                        <span class="px-2 py-1 bg-white bg-opacity-20 backdrop-blur-sm text-xs rounded-full border border-white border-opacity-30">3D</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- 快速信息 -->
+                                <div class="flex justify-between text-sm">
+                                    <span>192分钟</span>
+                                    <span>2022-12-16</span>
+                                    <span>美国</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 内容区域 -->
+                        <div class="bg-gray-900 rounded-t-3xl -mt-6 relative z-10">
+                            <!-- Tab导航 -->
+                            <div class="flex justify-around pt-6 pb-4 border-b border-gray-700">
+                                <button class="text-white font-medium pb-2 border-b-2 border-red-500">详情</button>
+                                <button class="text-gray-400 font-medium pb-2">排片</button>
+                                <button class="text-gray-400 font-medium pb-2">评论</button>
+                                <button class="text-gray-400 font-medium pb-2">相关</button>
+                            </div>
+                            
+                            <!-- 剧情简介 -->
+                            <div class="p-6">
+                                <h3 class="text-white text-lg font-semibold mb-3">剧情简介</h3>
+                                <p class="text-gray-300 text-sm leading-relaxed mb-4">
+                                    续集故事承接自第一部的剧情，纳美人杰克·萨利和奈蒂莉现在已经是一对夫妻，并且育有子女。萨利一家在潘多拉星球过着平静的生活，然而威胁再度降临，他们被迫离开家园，踏上探索潘多拉不同区域的旅程...
+                                </p>
+                                <button class="text-red-400 text-sm font-medium">查看完整剧情</button>
+                            </div>
+                            
+                            <!-- 导演和主演 -->
+                            <div class="px-6 pb-6">
+                                <div class="bg-gray-800 rounded-2xl p-4">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <div>
+                                            <p class="text-gray-400 text-xs">导演</p>
+                                            <p class="text-white font-medium">詹姆斯·卡梅隆</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-gray-400 text-xs">制片</p>
+                                            <p class="text-white font-medium">乔恩·兰道</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <h4 class="text-white font-medium mb-3">主要演员</h4>
+                                    <div class="flex space-x-3 overflow-x-auto">
+                                        <div class="flex-shrink-0 text-center w-14">
+                                            <img src="https://picsum.photos/56/56?random=11" 
+                                                 alt="演员" class="w-14 h-14 rounded-full object-cover mb-2 border-2 border-gray-600">
+                                            <p class="text-xs text-white font-medium">萨姆·沃辛顿</p>
+                                        </div>
+                                        <div class="flex-shrink-0 text-center w-14">
+                                            <img src="https://picsum.photos/56/56?random=12" 
+                                                 alt="演员" class="w-14 h-14 rounded-full object-cover mb-2 border-2 border-gray-600">
+                                            <p class="text-xs text-white font-medium">佐伊·萨尔达娜</p>
+                                        </div>
+                                        <div class="flex-shrink-0 text-center w-14">
+                                            <img src="https://picsum.photos/56/56?random=13" 
+                                                 alt="演员" class="w-14 h-14 rounded-full object-cover mb-2 border-2 border-gray-600">
+                                            <p class="text-xs text-white font-medium">凯特·温斯莱特</p>
+                                        </div>
+                                        <div class="flex-shrink-0 text-center w-14">
+                                            <img src="https://picsum.photos/56/56?random=14" 
+                                                 alt="演员" class="w-14 h-14 rounded-full object-cover mb-2 border-2 border-gray-600">
+                                            <p class="text-xs text-white font-medium">杨紫琼</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 剧照集锦 -->
+                            <div class="px-6 pb-6">
+                                <h3 class="text-white text-lg font-semibold mb-3">剧照集锦</h3>
+                                <div class="flex space-x-3 overflow-x-auto">
+                                    <img src="https://picsum.photos/120/80?random=15" 
+                                         alt="剧照" class="w-30 h-20 rounded-lg object-cover flex-shrink-0">
+                                    <img src="https://picsum.photos/120/80?random=16" 
+                                         alt="剧照" class="w-30 h-20 rounded-lg object-cover flex-shrink-0">
+                                    <img src="https://picsum.photos/120/80?random=17" 
+                                         alt="剧照" class="w-30 h-20 rounded-lg object-cover flex-shrink-0">
+                                </div>
+                            </div>
+                            
+                            <!-- 底部间距 -->
+                            <div class="h-20"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 悬浮购票按钮 -->
+                    <div class="absolute bottom-0 left-0 right-0 p-6">
+                        <div class="flex items-center justify-between bg-black bg-opacity-80 backdrop-blur-sm rounded-2xl p-4 border border-gray-700">
+                            <div class="flex items-center space-x-6">
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-heart text-red-500"></i>
+                                    <span class="text-white text-sm">2.3万</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-comment text-gray-400"></i>
+                                    <span class="text-white text-sm">8.5千</span>
+                                </div>
+                            </div>
+                            <button class="bg-gradient-to-r from-red-500 to-red-600 text-white px-8 py-3 rounded-xl font-medium text-sm shadow-lg">
+                                立即购票
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
